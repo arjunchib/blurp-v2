@@ -1,7 +1,9 @@
-class DiscordRestService {
+import { RESTGetAPIGatewayBotResult } from "discord-api-types/v10";
+
+export class DiscordRestService {
   private readonly baseUrl: string;
 
-  constructor(private version: number) {
+  constructor(version: number) {
     this.baseUrl = `https://discord.com/api/v${version}`;
   }
 
@@ -13,5 +15,9 @@ class DiscordRestService {
       ...init,
     });
     return await res.json<T>();
+  }
+
+  public async getGatewayBot() {
+    return await this.fetch<RESTGetAPIGatewayBotResult>("/gateway/bot");
   }
 }

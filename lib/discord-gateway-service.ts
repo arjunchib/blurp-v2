@@ -1,9 +1,11 @@
 import {
+  GatewayDispatchPayload,
   GatewayHeartbeat,
   GatewayIdentify,
   GatewayReceivePayload,
   GatewaySendPayload,
 } from "discord-api-types/v10";
+import { GatewayDispatchEvents } from "discord-api-types/gateway/v10";
 import { DiscordRestService } from "./discord-rest-service";
 
 export class DiscordGatewayService {
@@ -41,17 +43,20 @@ export class DiscordGatewayService {
   }
 
   public disconnect() {
-    this.ws.close();
     clearTimeout(this.heartbeatTimeoutId);
     clearInterval(this.heartbeatIntervalId);
+    this.ws.close();
   }
 
   private handleMessage(payload: GatewayReceivePayload) {
     this.s = payload.s;
     console.log("Received", payload);
     switch (payload.op) {
-      case 10:
+      case 10: // hello
         this.setupHeartbeat(payload.d.heartbeat_interval);
+        break;
+      case 0: // dispatch
+        this.handleDispatch(payload);
         break;
     }
   }
@@ -95,5 +100,13 @@ export class DiscordGatewayService {
       },
     };
     this.send(payload);
+  }
+
+  private handleDispatch(payload: GatewayDispatchPayload) {
+    switch (payload.t) {
+      case GatewayDispatchEvents.Ready:
+        console.log("READY RECIEVED");
+        break;
+    }
   }
 }

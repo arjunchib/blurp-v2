@@ -4,7 +4,6 @@
     "target": "esnext",
     "module": "esnext",
     "lib": ["ESNext"],
-    "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true
+    "moduleResolution": "node"
   }
 }

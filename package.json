@@ -1,6 +1,0 @@
-{
-  "dependencies": { "@types/ws": "^8.5.3", "discord-api-types": "^0.37.17", "ws": "^8.11.0" },
-  "devDependencies": {
-    "bun-types": "^0.2.2"
-  }
-}

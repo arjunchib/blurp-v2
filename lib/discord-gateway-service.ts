@@ -4,27 +4,28 @@ import {
   GatewayIdentify,
   GatewayReceivePayload,
   GatewaySendPayload,
-} from "discord-api-types/v10";
-import { GatewayDispatchEvents } from "discord-api-types/gateway/v10";
-import { DiscordRestService } from "./discord-rest-service";
+  GatewayDispatchEvents,
+} from "discord-api-types";
+import { DiscordRestService } from "./discord-rest-service.ts";
 
 export class DiscordGatewayService {
-  ws: WebSocket;
-  s: number | null;
-  heartbeatTimeoutId: number;
-  heartbeatIntervalId: number;
+  ws?: WebSocket;
+  s: number | null = null;
+  heartbeatTimeoutId?: number;
+  heartbeatIntervalId?: number;
 
   constructor(
-    private version: number,
+    private options: { version: number; token: string },
     private restService: DiscordRestService
   ) {}
 
   public async connect() {
     const { url } = await this.restService.getGatewayBot();
     const params = new URLSearchParams({
-      v: this.version.toString(),
+      v: this.options.version.toString(),
       encoding: "json",
     });
+    console.log(`${url}?${params}`);
     const wsUrl = new URL(`${url}?${params}`);
     this.ws = new WebSocket(wsUrl);
     this.ws.addEventListener("open", (event) => {
@@ -45,7 +46,7 @@ export class DiscordGatewayService {
   public disconnect() {
     clearTimeout(this.heartbeatTimeoutId);
     clearInterval(this.heartbeatIntervalId);
-    this.ws.close();
+    this.ws?.close();
   }
 
   private handleMessage(payload: GatewayReceivePayload) {
@@ -63,7 +64,7 @@ export class DiscordGatewayService {
 
   private send(payload: GatewaySendPayload) {
     console.log("Sent", payload);
-    this.ws.send(JSON.stringify(payload));
+    this.ws?.send(JSON.stringify(payload));
   }
 
   private setupHeartbeat(heartbeatInterval: number) {
@@ -90,7 +91,7 @@ export class DiscordGatewayService {
     const payload: GatewayIdentify = {
       op: 2,
       d: {
-        token: process.env.TOKEN,
+        token: this.options.token,
         intents: 1 << 7,
         properties: {
           os: "macos",

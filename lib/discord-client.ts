@@ -1,4 +1,8 @@
-import { RESTPutAPIApplicationCommandsJSONBody } from "./deps.ts";
+import {
+  GatewayDispatchEvents,
+  GatewayDispatchPayload,
+  RESTPutAPIApplicationCommandsJSONBody,
+} from "./deps.ts";
 import { DiscordGatewayService } from "./discord-gateway.service.ts";
 import { DiscordRestService } from "./discord-rest.service.ts";
 import { sha1 } from "./utils.ts";
@@ -12,7 +16,7 @@ export class DiscordClient {
     this.gatewayService = new DiscordGatewayService(this.restService);
   }
 
-  public async connect() {
+  public async run() {
     await this.updateCommands([
       {
         name: "test",
@@ -20,6 +24,13 @@ export class DiscordClient {
       },
     ]);
     await this.gatewayService.connect();
+  }
+
+  public on(
+    event: GatewayDispatchEvents,
+    fn: (payload: GatewayDispatchPayload) => Promise<void>
+  ) {
+    this.gatewayService.on(event, fn);
   }
 
   private async updateCommands(

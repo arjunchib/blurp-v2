@@ -18,6 +18,10 @@ export class DiscordGatewayService {
   private sessionId?: string;
   private resumeGatewayUrl?: URL;
   private gatewayUrl?: URL;
+  private hooks = new Map<
+    GatewayDispatchEvents,
+    ((payload: GatewayDispatchPayload) => Promise<void>)[]
+  >();
 
   constructor(private restService: DiscordRestService) {}
 
@@ -27,6 +31,18 @@ export class DiscordGatewayService {
       this.gatewayUrl = this.createGatewayUrl(url);
     }
     this.setupWebSocket(this.gatewayUrl);
+  }
+
+  public on(
+    event: GatewayDispatchEvents,
+    fn: (payload: GatewayDispatchPayload) => Promise<void>
+  ) {
+    const hooks = this.hooks.get(event);
+    if (hooks) {
+      hooks.push(fn);
+    } else {
+      this.hooks.set(event, [fn]);
+    }
   }
 
   private reconnect() {
@@ -47,8 +63,8 @@ export class DiscordGatewayService {
       console.log("Gateway opened");
       options?.onOpen?.();
     });
-    this.ws.addEventListener("message", (event) => {
-      this.handleMessage(JSON.parse(event.data));
+    this.ws.addEventListener("message", async (event) => {
+      await this.handleMessage(JSON.parse(event.data));
     });
     this.ws.addEventListener("close", (event) => {
       this.handleDisconnect(event);
@@ -72,7 +88,7 @@ export class DiscordGatewayService {
     this.ws?.close();
   }
 
-  private handleMessage(payload: GatewayReceivePayload) {
+  private async handleMessage(payload: GatewayReceivePayload) {
     this.s = payload.s;
     const log = ["Received", GatewayOpcodes[payload.op]];
     if (payload.op === GatewayOpcodes.Dispatch) log.push(`(${payload.t})`);
@@ -82,7 +98,7 @@ export class DiscordGatewayService {
         this.setupHeartbeat(payload.d.heartbeat_interval);
         break;
       case GatewayOpcodes.Dispatch:
-        this.handleDispatch(payload);
+        await this.handleDispatch(payload);
         break;
       case GatewayOpcodes.Reconnect:
         this.reconnect();
@@ -94,6 +110,7 @@ export class DiscordGatewayService {
           this.disconnect();
           this.connect();
         }
+        break;
     }
   }
 
@@ -138,7 +155,7 @@ export class DiscordGatewayService {
     this.send(payload);
   }
 
-  private handleDispatch(payload: GatewayDispatchPayload) {
+  private async handleDispatch(payload: GatewayDispatchPayload) {
     switch (payload.t) {
       case GatewayDispatchEvents.Ready:
         this.sessionId = payload.d.session_id;
@@ -146,6 +163,10 @@ export class DiscordGatewayService {
           payload.d.resume_gateway_url
         );
         break;
+    }
+    const hooks = this.hooks.get(payload.t);
+    if (hooks) {
+      await Promise.allSettled(hooks.map((fn) => fn(payload)));
     }
   }
 

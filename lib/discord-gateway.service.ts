@@ -6,8 +6,9 @@ import {
   GatewaySendPayload,
   GatewayDispatchEvents,
   GatewayOpcodes,
-} from "discord-api-types";
+} from "./deps.ts";
 import { DiscordRestService } from "./discord-rest.service.ts";
+import { environment } from "./environment.ts";
 
 export class DiscordGatewayService {
   private ws?: WebSocket;
@@ -18,10 +19,7 @@ export class DiscordGatewayService {
   private resumeGatewayUrl?: URL;
   private gatewayUrl?: URL;
 
-  constructor(
-    private options: { version: number; token: string },
-    private restService: DiscordRestService
-  ) {}
+  constructor(private restService: DiscordRestService) {}
 
   public async connect() {
     if (!this.gatewayUrl) {
@@ -46,7 +44,7 @@ export class DiscordGatewayService {
   private setupWebSocket(url: URL, options?: { onOpen?: () => void }) {
     this.ws = new WebSocket(url);
     this.ws.addEventListener("open", () => {
-      console.log("Opened!");
+      console.log("Gateway opened");
       options?.onOpen?.();
     });
     this.ws.addEventListener("message", (event) => {
@@ -62,7 +60,7 @@ export class DiscordGatewayService {
 
   private createGatewayUrl(url: string) {
     const params = new URLSearchParams({
-      v: this.options.version.toString(),
+      v: environment.version.toString(),
       encoding: "json",
     });
     return new URL(`${url}?${params}`);
@@ -128,7 +126,7 @@ export class DiscordGatewayService {
     const payload: GatewayIdentify = {
       op: GatewayOpcodes.Identify,
       d: {
-        token: this.options.token,
+        token: environment.token,
         intents: 1 << 7,
         properties: {
           os: "macos",
@@ -181,7 +179,7 @@ export class DiscordGatewayService {
       d: {
         session_id: this.sessionId!,
         seq: this.s!,
-        token: this.options.token,
+        token: environment.token,
       },
     });
   }

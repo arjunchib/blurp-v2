@@ -1,4 +1,4 @@
-import { configSync } from "https://deno.land/std@0.163.0/dotenv/mod.ts";
+import { configSync } from "./deps.ts";
 
 const { TOKEN, APPLICATION_ID, GUILD_ID } = configSync();
 

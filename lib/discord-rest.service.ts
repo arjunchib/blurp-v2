@@ -2,26 +2,20 @@ import {
   RESTGetAPIGatewayBotResult,
   RESTPutAPIApplicationCommandsJSONBody,
   RESTPutAPIApplicationCommandsResult,
-} from "discord-api-types";
+} from "./deps.ts";
+import { environment } from "./environment.ts";
 
 export class DiscordRestService {
   private readonly baseUrl: string;
 
-  constructor(
-    private options: {
-      version: number;
-      token: string;
-      applicationId: string;
-      guildId: string;
-    }
-  ) {
-    this.baseUrl = `https://discord.com/api/v${this.options.version}`;
+  constructor() {
+    this.baseUrl = `https://discord.com/api/v${environment.version}`;
   }
 
   private async fetch<T>(url: string, init?: RequestInit): Promise<T> {
     const res = await fetch(`${this.baseUrl}${url}`, {
       headers: {
-        Authorization: `Bot ${this.options.token}`,
+        Authorization: `Bot ${environment.token}`,
         "Content-Type": "application/json",
       },
       ...init,
@@ -36,8 +30,8 @@ export class DiscordRestService {
   public async bulkOverwriteGuildApplicationCommands(
     commands: RESTPutAPIApplicationCommandsJSONBody
   ) {
-    const { applicationId, guildId } = this.options;
-    return await this.fetch<RESTPutAPIApplicationCommandsResult>(
+    const { applicationId, guildId } = environment;
+    await this.fetch<RESTPutAPIApplicationCommandsResult>(
       `/applications/${applicationId}/guilds/${guildId}/commands`,
       {
         body: JSON.stringify(commands),

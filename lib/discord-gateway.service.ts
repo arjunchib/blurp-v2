@@ -7,7 +7,7 @@ import {
   GatewayDispatchEvents,
   GatewayOpcodes,
 } from "discord-api-types";
-import { DiscordRestService } from "./discord-rest-service.ts";
+import { DiscordRestService } from "./discord-rest.service.ts";
 
 export class DiscordGatewayService {
   private ws?: WebSocket;
@@ -45,7 +45,7 @@ export class DiscordGatewayService {
 
   private setupWebSocket(url: URL, options?: { onOpen?: () => void }) {
     this.ws = new WebSocket(url);
-    this.ws.addEventListener("open", (event) => {
+    this.ws.addEventListener("open", () => {
       console.log("Opened!");
       options?.onOpen?.();
     });

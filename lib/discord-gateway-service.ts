@@ -5,14 +5,18 @@ import {
   GatewayReceivePayload,
   GatewaySendPayload,
   GatewayDispatchEvents,
+  GatewayOpcodes,
 } from "discord-api-types";
 import { DiscordRestService } from "./discord-rest-service.ts";
 
 export class DiscordGatewayService {
-  ws?: WebSocket;
-  s: number | null = null;
-  heartbeatTimeoutId?: number;
-  heartbeatIntervalId?: number;
+  private ws?: WebSocket;
+  private s: number | null = null;
+  private heartbeatTimeoutId?: number;
+  private heartbeatIntervalId?: number;
+  private sessionId?: string;
+  private resumeGatewayUrl?: URL;
+  private gatewayUrl?: URL;
 
   constructor(
     private options: { version: number; token: string },
@@ -20,27 +24,48 @@ export class DiscordGatewayService {
   ) {}
 
   public async connect() {
-    const { url } = await this.restService.getGatewayBot();
-    const params = new URLSearchParams({
-      v: this.options.version.toString(),
-      encoding: "json",
+    if (!this.gatewayUrl) {
+      const { url } = await this.restService.getGatewayBot();
+      this.gatewayUrl = this.createGatewayUrl(url);
+    }
+    this.setupWebSocket(this.gatewayUrl);
+  }
+
+  private reconnect() {
+    this.disconnect();
+    if (!this.resumeGatewayUrl) {
+      return this.connect();
+    }
+    this.setupWebSocket(this.resumeGatewayUrl, {
+      onOpen: () => {
+        this.resume();
+      },
     });
-    console.log(`${url}?${params}`);
-    const wsUrl = new URL(`${url}?${params}`);
-    this.ws = new WebSocket(wsUrl);
+  }
+
+  private setupWebSocket(url: URL, options?: { onOpen?: () => void }) {
+    this.ws = new WebSocket(url);
     this.ws.addEventListener("open", (event) => {
       console.log("Opened!");
+      options?.onOpen?.();
     });
     this.ws.addEventListener("message", (event) => {
       this.handleMessage(JSON.parse(event.data));
     });
     this.ws.addEventListener("close", (event) => {
-      console.log("It closed", event);
+      this.handleDisconnect(event);
     });
     this.ws.addEventListener("error", (event) => {
       console.log("Error", event);
     });
-    setTimeout(() => this.disconnect(), 50000);
+  }
+
+  private createGatewayUrl(url: string) {
+    const params = new URLSearchParams({
+      v: this.options.version.toString(),
+      encoding: "json",
+    });
+    return new URL(`${url}?${params}`);
   }
 
   public disconnect() {
@@ -51,19 +76,31 @@ export class DiscordGatewayService {
 
   private handleMessage(payload: GatewayReceivePayload) {
     this.s = payload.s;
-    console.log("Received", payload);
+    const log = ["Received", GatewayOpcodes[payload.op]];
+    if (payload.op === GatewayOpcodes.Dispatch) log.push(`(${payload.t})`);
+    console.log(...log);
     switch (payload.op) {
-      case 10: // hello
+      case GatewayOpcodes.Hello:
         this.setupHeartbeat(payload.d.heartbeat_interval);
         break;
-      case 0: // dispatch
+      case GatewayOpcodes.Dispatch:
         this.handleDispatch(payload);
         break;
+      case GatewayOpcodes.Reconnect:
+        this.reconnect();
+        break;
+      case GatewayOpcodes.InvalidSession:
+        if (payload.d) {
+          this.reconnect();
+        } else {
+          this.disconnect();
+          this.connect();
+        }
     }
   }
 
   private send(payload: GatewaySendPayload) {
-    console.log("Sent", payload);
+    console.log("Sent", GatewayOpcodes[payload.op]);
     this.ws?.send(JSON.stringify(payload));
   }
 
@@ -81,7 +118,7 @@ export class DiscordGatewayService {
 
   private heartbeat() {
     const payload: GatewayHeartbeat = {
-      op: 1,
+      op: GatewayOpcodes.Heartbeat,
       d: this.s,
     };
     this.send(payload);
@@ -89,7 +126,7 @@ export class DiscordGatewayService {
 
   private identify() {
     const payload: GatewayIdentify = {
-      op: 2,
+      op: GatewayOpcodes.Identify,
       d: {
         token: this.options.token,
         intents: 1 << 7,
@@ -106,8 +143,46 @@ export class DiscordGatewayService {
   private handleDispatch(payload: GatewayDispatchPayload) {
     switch (payload.t) {
       case GatewayDispatchEvents.Ready:
-        console.log("READY RECIEVED");
+        this.sessionId = payload.d.session_id;
+        this.resumeGatewayUrl = this.createGatewayUrl(
+          payload.d.resume_gateway_url
+        );
         break;
     }
+  }
+
+  private handleDisconnect(event: CloseEvent) {
+    switch (event.code) {
+      case 4000:
+      case 4001:
+      case 4002:
+      case 4003:
+      case 4004:
+      case 4005:
+      case 4007:
+      case 4008:
+      case 4009:
+        this.reconnect();
+        break;
+      case 4010:
+      case 4011:
+      case 4012:
+      case 4013:
+      case 4014:
+        this.disconnect();
+        this.connect();
+        break;
+    }
+  }
+
+  private resume() {
+    this.send({
+      op: GatewayOpcodes.Resume,
+      d: {
+        session_id: this.sessionId!,
+        seq: this.s!,
+        token: this.options.token,
+      },
+    });
   }
 }

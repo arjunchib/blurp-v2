@@ -8,8 +8,8 @@ import { DiscordRestService } from "./discord-rest.service.ts";
 import { sha1 } from "./utils.ts";
 
 export class DiscordClient {
-  private restService;
-  private gatewayService;
+  restService;
+  gatewayService;
 
   constructor() {
     this.restService = new DiscordRestService();

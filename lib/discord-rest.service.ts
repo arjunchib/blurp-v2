@@ -1,5 +1,9 @@
 import {
+  APIBaseInteraction,
+  APIInteraction,
+  GatewayDispatchEvents,
   RESTGetAPIGatewayBotResult,
+  RESTPostAPIInteractionCallbackJSONBody,
   RESTPutAPIApplicationCommandsJSONBody,
   RESTPutAPIApplicationCommandsResult,
 } from "./deps.ts";
@@ -31,12 +35,23 @@ export class DiscordRestService {
     commands: RESTPutAPIApplicationCommandsJSONBody
   ) {
     const { applicationId, guildId } = environment;
-    await this.fetch<RESTPutAPIApplicationCommandsResult>(
+    return await this.fetch<RESTPutAPIApplicationCommandsResult>(
       `/applications/${applicationId}/guilds/${guildId}/commands`,
       {
         body: JSON.stringify(commands),
         method: "PUT",
       }
     );
+  }
+
+  public async createInteractionResponse(
+    interaction: { id: string; token: string },
+    interactionResponse: RESTPostAPIInteractionCallbackJSONBody
+  ) {
+    const { id, token } = interaction;
+    return await this.fetch(`/interactions/${id}/${token}/callback`, {
+      body: JSON.stringify(interactionResponse),
+      method: "POST",
+    });
   }
 }

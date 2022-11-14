@@ -1,7 +1,4 @@
 import {
-  APIBaseInteraction,
-  APIInteraction,
-  GatewayDispatchEvents,
   RESTGetAPIGatewayBotResult,
   RESTPostAPIInteractionCallbackJSONBody,
   RESTPutAPIApplicationCommandsJSONBody,

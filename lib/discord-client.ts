@@ -1,6 +1,8 @@
 import {
   GatewayDispatchEvents,
   GatewayDispatchPayload,
+  GatewayInteractionCreateDispatch,
+  RESTPostAPIInteractionCallbackJSONBody,
   RESTPutAPIApplicationCommandsJSONBody,
 } from "./deps.ts";
 import { DiscordGatewayService } from "./discord-gateway.service.ts";
@@ -31,6 +33,21 @@ export class DiscordClient {
     fn: (payload: GatewayDispatchPayload) => Promise<void>
   ) {
     this.gatewayService.on(event, fn);
+  }
+
+  public onInteraction(
+    fn: (
+      payload: GatewayInteractionCreateDispatch
+    ) =>
+      | Promise<RESTPostAPIInteractionCallbackJSONBody>
+      | RESTPostAPIInteractionCallbackJSONBody
+  ) {
+    const fnWrapper = async (payload: GatewayDispatchPayload) => {
+      if (payload.t !== GatewayDispatchEvents.InteractionCreate) return;
+      const res = await fn(payload);
+      await this.restService.createInteractionResponse(payload.d, res);
+    };
+    this.on(GatewayDispatchEvents.InteractionCreate, fnWrapper);
   }
 
   private async updateCommands(

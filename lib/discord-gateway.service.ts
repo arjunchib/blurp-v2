@@ -9,6 +9,7 @@ import {
 } from "./deps.ts";
 import { DiscordRestService } from "./discord-rest.service.ts";
 import { environment } from "./environment.ts";
+import { OptionalPromise } from "./utils.ts";
 
 export class DiscordGatewayService {
   private ws?: WebSocket;
@@ -25,7 +26,7 @@ export class DiscordGatewayService {
 
   constructor(private restService: DiscordRestService) {}
 
-  public async connect() {
+  async connect() {
     if (!this.gatewayUrl) {
       const { url } = await this.restService.getGatewayBot();
       this.gatewayUrl = this.createGatewayUrl(url);
@@ -33,16 +34,29 @@ export class DiscordGatewayService {
     this.setupWebSocket(this.gatewayUrl);
   }
 
-  public on(
-    event: GatewayDispatchEvents,
-    fn: (payload: GatewayDispatchPayload) => Promise<void>
+  disconnect() {
+    clearTimeout(this.heartbeatTimeoutId);
+    clearInterval(this.heartbeatIntervalId);
+    this.ws?.close();
+  }
+
+  on<T extends GatewayDispatchPayload>(
+    event: T["t"],
+    fn: (payload: T) => OptionalPromise<void>
   ) {
     const hooks = this.hooks.get(event);
     if (hooks) {
-      hooks.push(fn);
+      hooks.push(fn as (payload: GatewayDispatchPayload) => Promise<void>);
     } else {
-      this.hooks.set(event, [fn]);
+      this.hooks.set(event, [
+        fn as (payload: GatewayDispatchPayload) => Promise<void>,
+      ]);
     }
+  }
+
+  send(payload: GatewaySendPayload) {
+    console.log("Sent", GatewayOpcodes[payload.op]);
+    this.ws?.send(JSON.stringify(payload));
   }
 
   private reconnect() {
@@ -82,12 +96,6 @@ export class DiscordGatewayService {
     return new URL(`${url}?${params}`);
   }
 
-  public disconnect() {
-    clearTimeout(this.heartbeatTimeoutId);
-    clearInterval(this.heartbeatIntervalId);
-    this.ws?.close();
-  }
-
   private async handleMessage(payload: GatewayReceivePayload) {
     this.s = payload.s;
     const log = ["Received", GatewayOpcodes[payload.op]];
@@ -112,11 +120,6 @@ export class DiscordGatewayService {
         }
         break;
     }
-  }
-
-  private send(payload: GatewaySendPayload) {
-    console.log("Sent", GatewayOpcodes[payload.op]);
-    this.ws?.send(JSON.stringify(payload));
   }
 
   private setupHeartbeat(heartbeatInterval: number) {

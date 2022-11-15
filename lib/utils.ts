@@ -7,3 +7,5 @@ export async function sha1(data: string) {
     .join("");
   return hashHex;
 }
+
+export type OptionalPromise<T> = Promise<T> | T;

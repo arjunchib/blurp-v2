@@ -7,18 +7,21 @@ import {
 } from "./deps.ts";
 import { DiscordGatewayService } from "./discord-gateway.service.ts";
 import { DiscordRestService } from "./discord-rest.service.ts";
-import { sha1 } from "./utils.ts";
+import { DiscordVoiceService } from "./discord-voice.service.ts";
+import { OptionalPromise, sha1 } from "./utils.ts";
 
 export class DiscordClient {
-  restService;
-  gatewayService;
+  private restService;
+  private gatewayService;
+  private voiceService;
 
   constructor() {
     this.restService = new DiscordRestService();
     this.gatewayService = new DiscordGatewayService(this.restService);
+    this.voiceService = new DiscordVoiceService(this.gatewayService);
   }
 
-  public async run() {
+  async run() {
     await this.updateCommands([
       {
         name: "test",
@@ -28,26 +31,27 @@ export class DiscordClient {
     await this.gatewayService.connect();
   }
 
-  public on(
-    event: GatewayDispatchEvents,
-    fn: (payload: GatewayDispatchPayload) => Promise<void>
+  on<T extends GatewayDispatchPayload>(
+    event: T["t"],
+    fn: (payload: T) => OptionalPromise<void>
   ) {
     this.gatewayService.on(event, fn);
   }
 
-  public onInteraction(
+  onInteraction(
     fn: (
       payload: GatewayInteractionCreateDispatch
-    ) =>
-      | Promise<RESTPostAPIInteractionCallbackJSONBody>
-      | RESTPostAPIInteractionCallbackJSONBody
+    ) => OptionalPromise<RESTPostAPIInteractionCallbackJSONBody>
   ) {
-    const fnWrapper = async (payload: GatewayDispatchPayload) => {
-      if (payload.t !== GatewayDispatchEvents.InteractionCreate) return;
+    const fnWrapper = async (payload: GatewayInteractionCreateDispatch) => {
       const res = await fn(payload);
       await this.restService.createInteractionResponse(payload.d, res);
     };
     this.on(GatewayDispatchEvents.InteractionCreate, fnWrapper);
+  }
+
+  connectVoiceChannel(guildId: string, channelId: string) {
+    this.voiceService.connect(guildId, channelId);
   }
 
   private async updateCommands(

@@ -73,6 +73,7 @@
     "https://deno.land/x/discord_api_types@0.37.17/rpc/v10.ts": "fbaad9f3d73fce88e76b0e52ad5345093f18077e4293937c9ec0ee24415b9a93",
     "https://deno.land/x/discord_api_types@0.37.17/utils/internals.ts": "b853d4e7d2e3de3daab7ca7fa6b9a06af5b4e2f9e4783d9634a5bf3262d97994",
     "https://deno.land/x/discord_api_types@0.37.17/utils/v10.ts": "c731ae3a76e7bc62543f24e945420b1c1ff5870167e7990ffc134323cbfd73f2",
-    "https://deno.land/x/discord_api_types@0.37.17/v10.ts": "f3f23492c59e77859aba5b34431edf3668c37f722d7f70c2e1ef7ba4bcda3010"
+    "https://deno.land/x/discord_api_types@0.37.17/v10.ts": "f3f23492c59e77859aba5b34431edf3668c37f722d7f70c2e1ef7ba4bcda3010",
+    "https://deno.land/x/discord_api_types@0.37.17/voice/v4.ts": "cdf7ad9fc71e8881d6c36e4418c23d3804c2e622ba067b97bc3e95a4d65770e4"
   }
 }

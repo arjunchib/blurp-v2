@@ -1,5 +1,5 @@
-import { InteractionResponseType } from "./lib/deps.ts";
-import { DiscordClient } from "./lib/discord-client.ts";
+import { InteractionResponseType } from "../../lib/deps.ts";
+import { DiscordClient } from "../../lib/discord-client.ts";
 
 const discord = new DiscordClient();
 

@@ -7,7 +7,7 @@ import {
   GatewayDispatchEvents,
   GatewayOpcodes,
 } from "./deps.ts";
-import { DiscordRestService } from "./discord-rest.service.ts";
+import { DiscordRestService } from "./rest.ts";
 import { environment } from "./environment.ts";
 import { OptionalPromise } from "./utils.ts";
 

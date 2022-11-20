@@ -5,14 +5,10 @@ import {
   GatewayVoiceStateUpdateDispatch,
   VoiceOpcodes,
 } from "./deps.ts";
-import { DiscordGatewayService } from "./discord-gateway.service.ts";
+import { DiscordGatewayService } from "./gateway.ts";
 import { environment } from "./environment.ts";
 import { WebmOpusDemuxer } from "./audio/mod.ts";
-import {
-  iterateReader,
-  readerFromStreamReader,
-} from "https://deno.land/std@0.165.0/streams/conversion.ts";
-import { randomNBit, sleep } from "./utils.ts";
+import { randomNBit } from "./utils.ts";
 import {
   secretbox,
   randomBytes,

@@ -5,9 +5,9 @@ import {
   RESTPostAPIInteractionCallbackJSONBody,
   RESTPutAPIApplicationCommandsJSONBody,
 } from "./deps.ts";
-import { DiscordGatewayService } from "./discord-gateway.service.ts";
-import { DiscordRestService } from "./discord-rest.service.ts";
-import { DiscordVoiceService } from "./discord-voice.service.ts";
+import { DiscordGatewayService } from "./gateway.ts";
+import { DiscordRestService } from "./rest.ts";
+import { DiscordVoiceService } from "./voice.ts";
 import { OptionalPromise, sha1 } from "./utils.ts";
 
 export class DiscordClient {

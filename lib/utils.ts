@@ -14,7 +14,7 @@ export function randomNBit(numberOfBits: number) {
   return Math.floor(Math.random() * 2 ** numberOfBits);
 }
 
-export async function sleep(ms: number): Promise<void> {
+export function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => {
     setTimeout(() => resolve(), ms);
   });

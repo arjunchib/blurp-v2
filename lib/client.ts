@@ -1,24 +1,23 @@
 import {
   GatewayDispatchEvents,
-  GatewayDispatchPayload,
   GatewayInteractionCreateDispatch,
   RESTPostAPIInteractionCallbackJSONBody,
   RESTPutAPIApplicationCommandsJSONBody,
 } from "./deps.ts";
-import { DiscordGatewayService } from "./gateway.ts";
-import { DiscordRestService } from "./rest.ts";
-import { DiscordVoiceService } from "./voice.ts";
+import { Gateway } from "./gateway.ts";
+import { Rest } from "./rest.ts";
+// import { Voice } from "./voice.ts";
 import { OptionalPromise, sha1 } from "./utils.ts";
 
-export class DiscordClient {
-  private restService;
-  private gatewayService;
-  private voiceService;
+export class DiscoClient {
+  rest: Rest;
+  gateway: Gateway;
+  // voice: Voice;
 
   constructor() {
-    this.restService = new DiscordRestService();
-    this.gatewayService = new DiscordGatewayService(this.restService);
-    this.voiceService = new DiscordVoiceService(this.gatewayService);
+    this.rest = new Rest();
+    this.gateway = new Gateway(this);
+    // this.voice = new Voice(this);
   }
 
   async run() {
@@ -28,14 +27,7 @@ export class DiscordClient {
         description: "This is a test",
       },
     ]);
-    await this.gatewayService.connect();
-  }
-
-  on<T extends GatewayDispatchPayload>(
-    event: T["t"],
-    fn: (payload: T) => OptionalPromise<void>
-  ) {
-    this.gatewayService.on(event, fn);
+    await this.gateway.connect();
   }
 
   onInteraction(
@@ -43,16 +35,21 @@ export class DiscordClient {
       payload: GatewayInteractionCreateDispatch
     ) => OptionalPromise<RESTPostAPIInteractionCallbackJSONBody>
   ) {
-    const fnWrapper = async (payload: GatewayInteractionCreateDispatch) => {
+    const fnWrapper = async (event: Event) => {
+      const payload: GatewayInteractionCreateDispatch = (event as CustomEvent)
+        .detail;
       const res = await fn(payload);
-      await this.restService.createInteractionResponse(payload.d, res);
+      await this.rest.createInteractionResponse(payload.d, res);
     };
-    this.on(GatewayDispatchEvents.InteractionCreate, fnWrapper);
+    this.gateway.events.addEventListener(
+      GatewayDispatchEvents.InteractionCreate,
+      fnWrapper
+    );
   }
 
-  connectVoiceChannel(guildId: string, channelId: string) {
-    this.voiceService.connect(guildId, channelId);
-  }
+  // connectVoiceChannel(guildId: string, channelId: string) {
+  //   this.voice.connect(guildId, channelId);
+  // }
 
   private async updateCommands(
     commands: RESTPutAPIApplicationCommandsJSONBody
@@ -60,7 +57,7 @@ export class DiscordClient {
     const hash = await sha1(JSON.stringify(commands));
     const storageKey = "commandHash";
     if (localStorage.getItem(storageKey) === hash) {
-      this.restService.bulkOverwriteGuildApplicationCommands(commands);
+      this.rest.bulkOverwriteGuildApplicationCommands(commands);
       console.log("Updated commands");
     } else {
       localStorage.setItem(storageKey, hash);

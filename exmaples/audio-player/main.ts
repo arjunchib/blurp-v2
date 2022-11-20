@@ -1,16 +1,18 @@
 import { InteractionResponseType } from "../../lib/deps.ts";
-import { DiscordClient } from "../../lib/discord-client.ts";
+import { DiscoClient } from "../../lib/client.ts";
 
-const discord = new DiscordClient();
+const disco = new DiscoClient();
 
-discord.onInteraction(() => {
-  discord.connectVoiceChannel("213484561127047168", "213484561127047169");
+disco.onInteraction((payload) => {
+  // discord.connectVoiceChannel("213484561127047168", "213484561127047169");
   return {
     type: InteractionResponseType.ChannelMessageWithSource,
     data: {
-      content: "Congrats on sending your command!",
+      content: `Congrats on sending your command, ${
+        payload.d.member?.nick || "friendo"
+      }!`,
     },
   };
 });
 
-await discord.run();
+await disco.run();

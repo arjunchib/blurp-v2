@@ -6,7 +6,7 @@ import {
 } from "./deps.ts";
 import { environment } from "./environment.ts";
 
-export class DiscordRestService {
+export class Rest {
   private readonly baseUrl: string;
 
   constructor() {
@@ -21,7 +21,11 @@ export class DiscordRestService {
       },
       ...init,
     });
-    return await res.json();
+    try {
+      return await res.json();
+    } catch (_e) {
+      return {} as T;
+    }
   }
 
   public async getGatewayBot() {

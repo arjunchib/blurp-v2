@@ -5,7 +5,6 @@ import {
   GatewayVoiceStateUpdateDispatch,
   VoiceOpcodes,
 } from "./deps.ts";
-import { DiscordGatewayService } from "./gateway.ts";
 import { environment } from "./environment.ts";
 import { WebmOpusDemuxer } from "./audio/mod.ts";
 import { randomNBit } from "./utils.ts";
@@ -13,6 +12,7 @@ import {
   secretbox,
   randomBytes,
 } from "https://cdn.skypack.dev/tweetnacl@v1.0.3?dts";
+import { DiscoClient } from "./client.ts";
 
 type VoicePayload =
   | VoiceReadyPayload
@@ -54,7 +54,7 @@ const SUPPORTED_ENCRYPTION_MODES = [
   "xsalsa20_poly1305",
 ];
 
-export class DiscordVoiceService {
+export class Voice {
   private sessionId?: string;
   private ws?: WebSocket;
   private heartbeatIntervalId?: number;
@@ -67,22 +67,22 @@ export class DiscordVoiceService {
   private socket?: Deno.DatagramConn;
   private destAddr?: Deno.NetAddr;
 
-  constructor(private gatewayService: DiscordGatewayService) {}
+  constructor(private client: DiscoClient) {}
 
   connect(guildId: string, channelId: string) {
-    this.gatewayService.on(
+    this.client.gateway.on(
       GatewayDispatchEvents.VoiceStateUpdate,
       (payload: GatewayVoiceStateUpdateDispatch) => {
         this.sessionId = payload.d.session_id;
       }
     );
-    this.gatewayService.on(
+    this.client.gateway.on(
       GatewayDispatchEvents.VoiceServerUpdate,
       (payload: GatewayVoiceServerUpdateDispatch) => {
         this.setupWebsocket(payload.d);
       }
     );
-    this.gatewayService.send({
+    this.client.gateway.send({
       op: GatewayOpcodes.VoiceStateUpdate,
       d: {
         self_deaf: false,

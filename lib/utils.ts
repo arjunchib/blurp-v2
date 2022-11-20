@@ -9,3 +9,13 @@ export async function sha1(data: string) {
 }
 
 export type OptionalPromise<T> = Promise<T> | T;
+
+export function randomNBit(numberOfBits: number) {
+  return Math.floor(Math.random() * 2 ** numberOfBits);
+}
+
+export async function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => {
+    setTimeout(() => resolve(), ms);
+  });
+}

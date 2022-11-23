@@ -3,8 +3,13 @@ import { DiscoClient } from "../../lib/client.ts";
 
 const disco = new DiscoClient();
 
-disco.onInteraction((payload) => {
-  // discord.connectVoiceChannel("213484561127047168", "213484561127047169");
+disco.onInteraction(async (payload) => {
+  const voiceConn = await disco.voice.connect(
+    "213484561127047168",
+    "213484561127047169"
+  );
+  const file = await Deno.open("test.webm");
+  voiceConn.playAudioStream(file.readable);
   return {
     type: InteractionResponseType.ChannelMessageWithSource,
     data: {

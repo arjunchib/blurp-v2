@@ -6,18 +6,18 @@ import {
 } from "./deps.ts";
 import { Gateway } from "./gateway.ts";
 import { Rest } from "./rest.ts";
-// import { Voice } from "./voice.ts";
+import { Voice } from "./voice.ts";
 import { OptionalPromise, sha1 } from "./utils.ts";
 
 export class DiscoClient {
   rest: Rest;
   gateway: Gateway;
-  // voice: Voice;
+  voice: Voice;
 
   constructor() {
     this.rest = new Rest();
     this.gateway = new Gateway(this);
-    // this.voice = new Voice(this);
+    this.voice = new Voice(this);
   }
 
   async run() {
@@ -35,9 +35,7 @@ export class DiscoClient {
       payload: GatewayInteractionCreateDispatch
     ) => OptionalPromise<RESTPostAPIInteractionCallbackJSONBody>
   ) {
-    const fnWrapper = async (event: Event) => {
-      const payload: GatewayInteractionCreateDispatch = (event as CustomEvent)
-        .detail;
+    const fnWrapper = async (payload: GatewayInteractionCreateDispatch) => {
       const res = await fn(payload);
       await this.rest.createInteractionResponse(payload.d, res);
     };

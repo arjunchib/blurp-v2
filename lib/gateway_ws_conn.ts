@@ -87,7 +87,7 @@ export class GatewayWsConn {
         }
         break;
       case GatewayOpcodes.Dispatch:
-        await this.handleDispatch(payload);
+        this.handleDispatch(payload);
         break;
       case GatewayOpcodes.Reconnect:
         this.reconnect();

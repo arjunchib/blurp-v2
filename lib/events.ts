@@ -1,26 +1,34 @@
-export class Events<T extends string> {
+interface stringable {
+  toString(): string;
+}
+
+export class Events<T extends stringable, D> {
   private eventTarget = new EventTarget();
+  private listenerMap = new WeakMap<(data: D) => void, EventListener>();
 
-  addEventListener(
-    type: T,
-    listener: EventListenerOrEventListenerObject | null,
-    options?: boolean | AddEventListenerOptions | undefined
+  addEventListener<T2 extends T, D2 extends D>(
+    type: T2,
+    listener: (data: D2) => void
   ): void {
-    this.eventTarget.addEventListener(type, listener, options);
+    const fn = (e: Event) => {
+      const eventData = e instanceof CustomEvent ? e.detail : null;
+      listener(eventData);
+    };
+    this.listenerMap.set(listener as (data: D) => void, fn);
+    this.eventTarget.addEventListener(type.toString(), fn);
   }
 
-  removeEventListener(
-    type: T,
-    callback: EventListenerOrEventListenerObject | null,
-    options?: boolean | EventListenerOptions | undefined
+  removeEventListener<T2 extends T, D2 extends D>(
+    type: T2,
+    listener: (data: D2) => void
   ): void {
-    this.eventTarget.removeEventListener(type, callback, options);
+    const fn = this.listenerMap.get(listener as (data: D) => void) || null;
+    this.eventTarget.removeEventListener(type.toString(), fn);
   }
 
-  // deno-lint-ignore ban-types
-  dispatchEvent(type: T, data?: {}): boolean {
+  dispatchEvent(type: T, data?: D): boolean {
     return this.eventTarget.dispatchEvent(
-      new CustomEvent(type, {
+      new CustomEvent(type.toString(), {
         detail: data,
       })
     );

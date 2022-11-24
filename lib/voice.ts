@@ -8,7 +8,7 @@ export class Voice {
 
   async connect(guildId: string, channelId: string): Promise<VoiceConn> {
     let voiceConn = this.voiceConnections.get(guildId);
-    if (voiceConn) {
+    if (voiceConn && voiceConn.status === "open") {
       // Move channel
     } else {
       voiceConn = new VoiceConn(this.client, guildId);

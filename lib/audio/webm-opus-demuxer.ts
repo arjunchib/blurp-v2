@@ -11,6 +11,8 @@ export class WebmOpusDemuxerTransformer extends WebmBaseDemuxerTransformer {
   }
 }
 
-export const WebmOpusDemuxer = new TransformStream(
-  new WebmOpusDemuxerTransformer()
-);
+export class WebmOpusDemuxer extends TransformStream {
+  constructor() {
+    super(new WebmOpusDemuxerTransformer());
+  }
+}

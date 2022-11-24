@@ -71,7 +71,7 @@ export class GatewayWsConn {
     });
   }
 
-  private async handleMessage(payload: GatewayReceivePayload) {
+  private handleMessage(payload: GatewayReceivePayload) {
     this.seq = payload.s;
     localStorage.setItem("seq", this.seq?.toString() || "");
     const log = ["Received", GatewayOpcodes[payload.op]];

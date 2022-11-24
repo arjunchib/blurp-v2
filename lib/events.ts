@@ -23,6 +23,8 @@ export class Events<T extends stringable, D> {
     listener: (data: D2) => void
   ): void {
     const fn = this.listenerMap.get(listener as (data: D) => void) || null;
+    this.listenerMap.delete(listener as (data: D) => void);
+    console.log("Remove listener", listener, fn?.name);
     this.eventTarget.removeEventListener(type.toString(), fn);
   }
 

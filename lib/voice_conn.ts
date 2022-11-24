@@ -3,28 +3,23 @@ import {
   GatewayOpcodes,
   GatewayVoiceServerUpdateDispatch,
   GatewayVoiceStateUpdateDispatch,
-  VoiceOpcodes,
 } from "./deps.ts";
 import { WebmOpusDemuxer } from "./audio/mod.ts";
 import { DiscoClient } from "./client.ts";
 import { VoiceWsConn } from "./voice_ws_conn.ts";
-import {
-  VoiceConnState,
-  VoiceReadyPayload,
-  VoiceSessionDescription,
-} from "./voice_models.ts";
-import { VoiceUdpConn } from "./voice_udp_conn.ts";
-
-const SUPPORTED_ENCRYPTION_MODES = [
-  "xsalsa20_poly1305_lite",
-  "xsalsa20_poly1305_suffix",
-  "xsalsa20_poly1305",
-];
+import { VoiceConnState } from "./voice_models.ts";
 
 export class VoiceConn {
   private connected: Promise<void>;
-  private connectedResolve?: (value: void | PromiseLike<void>) => void;
   private state: VoiceConnState;
+  private intervalId?: number;
+  private voiceStateUpdateHandler?: (
+    payload: GatewayVoiceStateUpdateDispatch
+  ) => void;
+  private voiceServerUpdateHandler?: (
+    payload: GatewayVoiceServerUpdateDispatch
+  ) => void;
+  status: "open" | "closed" = "open";
 
   constructor(private client: DiscoClient, private guildId: string) {
     this.state = {
@@ -32,7 +27,7 @@ export class VoiceConn {
       guildId,
     };
     this.connected = new Promise((resolve) => {
-      this.connectedResolve = resolve;
+      this.state.connectedResolve = resolve;
     });
   }
 
@@ -42,7 +37,23 @@ export class VoiceConn {
     return await this.connected;
   }
 
-  private sendVoiceStateUpdate(channelId: string) {
+  disconnect() {
+    clearInterval(this.intervalId);
+    this.client.gateway.events.removeEventListener(
+      GatewayDispatchEvents.VoiceStateUpdate,
+      this.voiceServerUpdateHandler!
+    );
+    this.client.gateway.events.removeEventListener(
+      GatewayDispatchEvents.VoiceServerUpdate,
+      this.voiceServerUpdateHandler!
+    );
+    this.status = "closed";
+    this.state.udp?.close();
+    this.state.ws?.close();
+    this.sendVoiceStateUpdate(null);
+  }
+
+  private sendVoiceStateUpdate(channelId: string | null) {
     this.client.gateway.send({
       op: GatewayOpcodes.VoiceStateUpdate,
       d: {
@@ -55,90 +66,55 @@ export class VoiceConn {
   }
 
   private listenGatewayEvents() {
-    const voiceStateUpdateHandler = (
+    this.voiceStateUpdateHandler = (
       payload: GatewayVoiceStateUpdateDispatch
     ) => {
       if (payload.d.guild_id !== this.state.guildId) return;
       this.state.sessionId = payload.d.session_id;
       this.client.gateway.events.removeEventListener(
         GatewayDispatchEvents.VoiceStateUpdate,
-        voiceStateUpdateHandler
+        this.voiceStateUpdateHandler!
       );
     };
     this.client.gateway.events.addEventListener(
       GatewayDispatchEvents.VoiceStateUpdate,
-      voiceStateUpdateHandler
+      this.voiceStateUpdateHandler
     );
-    const voiceServerUpdateHandler = (
+    this.voiceServerUpdateHandler = (
       payload: GatewayVoiceServerUpdateDispatch
     ) => {
       if (payload.d.guild_id !== this.state.guildId) return;
       this.state.endpoint = payload.d.endpoint || undefined;
       this.state.token = payload.d.token;
       this.state.ws = new VoiceWsConn(this.state);
-      this.listenWsEvents();
       this.client.gateway.events.removeEventListener(
-        GatewayDispatchEvents.VoiceStateUpdate,
-        voiceServerUpdateHandler
+        GatewayDispatchEvents.VoiceServerUpdate,
+        this.voiceServerUpdateHandler!
       );
     };
     this.client.gateway.events.addEventListener(
       GatewayDispatchEvents.VoiceServerUpdate,
-      voiceServerUpdateHandler
-    );
-  }
-
-  private listenWsEvents() {
-    if (!this.state.ws) throw new Error("Websocket not setup");
-    this.state.ws.events.addEventListener(
-      VoiceOpcodes.Ready,
-      async (payload: VoiceReadyPayload) => {
-        this.chooseEncryptionMode(payload.d.modes);
-        this.state.ssrc = payload.d.ssrc;
-        this.state.destAddr = {
-          transport: "udp",
-          port: payload.d.port,
-          hostname: payload.d.ip,
-        };
-        this.state.udp = new VoiceUdpConn(this.state);
-        const { address, port } = await this.state.udp.discoverIp();
-        this.state.ws?.selectProtocol(address, port);
-      }
-    );
-    this.state.ws?.events.addEventListener(
-      VoiceOpcodes.SessionDescription,
-      (payload: VoiceSessionDescription) => {
-        this.state.encryptionMode = payload.d.mode;
-        this.state.secretKey = new Uint8Array(payload.d.secret_key);
-        console.log(`Mode is`, this.state.encryptionMode);
-        console.log(`Secret key is`, this.state.secretKey);
-        this.connectedResolve?.();
-      }
-    );
-  }
-
-  private chooseEncryptionMode(options: string[]) {
-    this.state.encryptionMode = options.find((option) =>
-      SUPPORTED_ENCRYPTION_MODES.includes(option)
+      this.voiceServerUpdateHandler
     );
   }
 
   playAudioStream(stream: ReadableStream<Uint8Array>) {
     return new Promise<void>((resolve) => {
       this.state.ws?.sendSpeaking(true);
-      const rs = stream.pipeThrough(WebmOpusDemuxer);
+      const rs = stream.pipeThrough(new WebmOpusDemuxer());
       const reader = rs.getReader();
-      const intervalId = setInterval(async () => {
+      this.intervalId = setInterval(async () => {
         const chunk = await reader.read();
         if (chunk.done) {
-          clearInterval(intervalId);
+          clearInterval(this.intervalId);
           this.state.ws?.sendSpeaking(false);
+          reader.releaseLock();
           resolve();
           return;
         }
         this.state.udp?.sendAudioPacket(chunk.value);
-        console.log(`[audio] Sent packet ${this.state.destAddr?.hostname}`);
-      }, 20);
+        // console.log(`[audio] Sent packet ${this.state.destAddr?.hostname}`);
+      }, 15);
     });
   }
 }

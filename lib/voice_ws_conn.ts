@@ -1,16 +1,23 @@
 import { VoiceOpcodes } from "./deps.ts";
 import { environment } from "./environment.ts";
-import { Events } from "./events.ts";
 import {
   VoiceConnState,
   VoiceHelloPayload,
   VoicePayload,
+  VoiceReadyPayload,
+  VoiceSessionDescriptionPayload,
 } from "./voice_models.ts";
+import { VoiceUdpConn } from "./voice_udp_conn.ts";
+
+const SUPPORTED_ENCRYPTION_MODES = [
+  "xsalsa20_poly1305_lite",
+  "xsalsa20_poly1305_suffix",
+  "xsalsa20_poly1305",
+];
 
 export class VoiceWsConn {
   private ws!: WebSocket;
   private heartbeatIntervalId?: number;
-  events = new Events<VoiceOpcodes, VoicePayload>();
 
   constructor(private state: VoiceConnState) {
     if (!state.endpoint) {
@@ -20,12 +27,17 @@ export class VoiceWsConn {
     this.ws.addEventListener("open", () => {
       this.identify();
     });
-    this.ws.addEventListener("message", (event) => {
-      this.handleMessage(JSON.parse(event.data));
+    this.ws.addEventListener("message", async (event) => {
+      await this.handleMessage(JSON.parse(event.data));
     });
     this.ws.addEventListener("close", (event) => {
-      console.log("Closed voice connection", event);
+      console.log(`[voice] Closed connection ${event.code} ${event.reason}`);
     });
+  }
+
+  close() {
+    clearInterval(this.heartbeatIntervalId);
+    this.ws.close();
   }
 
   sendSpeaking(speaking: boolean) {
@@ -40,6 +52,11 @@ export class VoiceWsConn {
   }
 
   selectProtocol(address: string, port: number) {
+    console.log({
+      address,
+      port,
+      mode: this.state.encryptionMode,
+    });
     this.send({
       op: 1,
       d: {
@@ -53,6 +70,7 @@ export class VoiceWsConn {
     });
   }
 
+  // deno-lint-ignore no-explicit-any
   private send(payload: any) {
     console.log("[voice] Sent", VoiceOpcodes[payload.op]);
     this.ws?.send?.(JSON.stringify(payload));
@@ -70,14 +88,46 @@ export class VoiceWsConn {
     });
   }
 
-  private handleMessage(payload: VoicePayload) {
+  private async handleMessage(payload: VoicePayload) {
     console.log("[voice] Received", VoiceOpcodes[payload.op]);
     switch (payload.op) {
       case VoiceOpcodes.Hello:
         this.setupHeartbeat(payload);
         break;
+      case VoiceOpcodes.Ready:
+        await this.onReady(payload);
+        break;
+      case VoiceOpcodes.SessionDescription:
+        this.onSessionDescription(payload);
+        break;
     }
-    this.events.dispatchEvent(payload.op, payload);
+  }
+
+  private async onReady(payload: VoiceReadyPayload) {
+    this.chooseEncryptionMode(payload.d.modes);
+    this.state.ssrc = payload.d.ssrc;
+    this.state.destAddr = {
+      transport: "udp",
+      port: payload.d.port,
+      hostname: payload.d.ip,
+    };
+    this.state.udp = new VoiceUdpConn(this.state);
+    const { address, port } = await this.state.udp.discoverIp();
+    this.state.ws?.selectProtocol(address, port);
+  }
+
+  onSessionDescription(payload: VoiceSessionDescriptionPayload) {
+    this.state.encryptionMode = payload.d.mode;
+    this.state.secretKey = new Uint8Array(payload.d.secret_key);
+    console.log(`Mode is`, this.state.encryptionMode);
+    console.log(`Secret key is`, this.state.secretKey);
+    this.state.connectedResolve?.();
+  }
+
+  private chooseEncryptionMode(options: string[]) {
+    this.state.encryptionMode = options.find((option) =>
+      SUPPORTED_ENCRYPTION_MODES.includes(option)
+    );
   }
 
   private setupHeartbeat(payload: VoiceHelloPayload) {

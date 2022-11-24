@@ -27,6 +27,10 @@ export class VoiceUdpConn {
     this.socket?.send(packet, this.state.destAddr!);
   }
 
+  close() {
+    this.socket?.close();
+  }
+
   async discoverIp() {
     if (!this.state.ssrc) throw new Error("No SSRC set");
     if (!this.state.destAddr) throw new Error("No destination address");

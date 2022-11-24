@@ -5,7 +5,7 @@ import { VoiceWsConn } from "./voice_ws_conn.ts";
 export type VoicePayload =
   | VoiceReadyPayload
   | VoiceHelloPayload
-  | VoiceSessionDescription;
+  | VoiceSessionDescriptionPayload;
 
 export interface VoiceReadyPayload {
   op: VoiceOpcodes.Ready;
@@ -25,7 +25,7 @@ export interface VoiceHelloPayload {
   };
 }
 
-export interface VoiceSessionDescription {
+export interface VoiceSessionDescriptionPayload {
   op: VoiceOpcodes.SessionDescription;
   d: {
     mode: string;
@@ -47,4 +47,5 @@ export interface VoiceConnState {
   destAddr?: Deno.NetAddr;
   endpoint?: string;
   token?: string;
+  connectedResolve?: (value: void | PromiseLike<void>) => void;
 }

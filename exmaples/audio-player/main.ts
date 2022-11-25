@@ -1,10 +1,49 @@
-import { InteractionResponseType } from "../../lib/deps.ts";
+import {
+  ChannelType,
+  ComponentType,
+  InteractionResponseType,
+  InteractionType,
+} from "../../lib/deps.ts";
 import { DiscoClient } from "../../lib/client.ts";
 
 const disco = new DiscoClient();
 
+let channelId = localStorage.getItem("channelId");
+
 disco.onInteraction((payload) => {
-  play();
+  if (
+    payload.d.type === InteractionType.MessageComponent &&
+    payload.d.data.custom_id === "channel" &&
+    payload.d.data.component_type === ComponentType.ChannelSelect
+  ) {
+    channelId = payload.d.data.values[0];
+    localStorage.setItem("channelId", channelId);
+  }
+  if (!channelId) {
+    return {
+      type: InteractionResponseType.ChannelMessageWithSource,
+      data: {
+        content: "Pick a channel to play on",
+        components: [
+          {
+            type: ComponentType.ActionRow,
+            components: [
+              {
+                type: ComponentType.ChannelSelect,
+                custom_id: "channel",
+                channel_types: [ChannelType.GuildVoice],
+              },
+            ],
+          },
+        ],
+      },
+    };
+  }
+  const guildId = payload.d.guild_id;
+  if (!guildId) {
+    throw new Error("No guild id");
+  }
+  play(guildId);
   return {
     type: InteractionResponseType.ChannelMessageWithSource,
     data: {
@@ -15,11 +54,11 @@ disco.onInteraction((payload) => {
   };
 });
 
-async function play() {
-  const voiceConn = await disco.voice.connect(
-    "213484561127047168",
-    "213484561127047169"
-  );
+async function play(guildId: string) {
+  if (!channelId) {
+    throw new Error("No channel id");
+  }
+  const voiceConn = await disco.voice.connect(guildId, channelId);
   const file = await Deno.open("test.webm", { read: true });
   // Play audio stream consumes the file
   await voiceConn.playAudioStream(file.readable);

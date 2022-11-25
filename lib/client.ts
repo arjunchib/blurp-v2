@@ -45,10 +45,6 @@ export class DiscoClient {
     );
   }
 
-  // connectVoiceChannel(guildId: string, channelId: string) {
-  //   this.voice.connect(guildId, channelId);
-  // }
-
   private async updateCommands(
     commands: RESTPutAPIApplicationCommandsJSONBody
   ) {

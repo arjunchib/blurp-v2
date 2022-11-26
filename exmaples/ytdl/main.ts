@@ -5,6 +5,7 @@ import {
   InteractionType,
 } from "../../lib/deps.ts";
 import { DiscoClient } from "../../lib/client.ts";
+import ytdl from "https://deno.land/x/ytdl_core@v0.1.1/mod.ts";
 
 const disco = new DiscoClient();
 
@@ -59,9 +60,10 @@ async function play(guildId: string) {
     throw new Error("No channel id");
   }
   const voiceConn = await disco.voice.connect(guildId, channelId);
-  const file = await Deno.open("test.webm");
-  const stream = file.readable;
-  // Play audio stream consumes the file
+  const stream = await ytdl("FZUcpVmEHuk", {
+    filter: (format) =>
+      format.audioCodec === "opus" && format.container === "webm",
+  });
   await voiceConn.playAudioStream(stream);
   voiceConn.disconnect();
 }

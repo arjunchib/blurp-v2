@@ -7,5 +7,7 @@ A Discord framework for Deno!
 ## Todo
 
 - [ ] Voice resuming
-- [ ] Interaction interface
+- [ ] Interaction helpers
 - [ ] Documentation
+- [ ] Dev server
+- [ ] Client interface

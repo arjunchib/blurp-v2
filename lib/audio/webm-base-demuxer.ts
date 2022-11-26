@@ -46,7 +46,6 @@ export abstract class WebmBaseDemuxerTransformer implements Transformer {
       this.skipUntil = null;
     } else if (this.skipUntil) {
       this.count += chunk.length;
-      controller.terminate();
       return;
     }
     let result: ReturnType<typeof this.readTag> | undefined;
@@ -67,7 +66,6 @@ export abstract class WebmBaseDemuxerTransformer implements Transformer {
     }
     this.count += offset;
     this.remainder = chunk.slice(offset);
-    controller.terminate();
     return;
   }
 
@@ -87,7 +85,10 @@ export abstract class WebmBaseDemuxerTransformer implements Transformer {
       }
     | typeof TOO_SHORT {
     const idData = this.readEBMLId(chunk, offset);
-    if (idData === TOO_SHORT) return TOO_SHORT;
+    if (idData === TOO_SHORT) {
+      console.log("too short 1");
+      return TOO_SHORT;
+    }
     const ebmlID = toHex(idData.id);
     if (!this.ebmlFound) {
       if (ebmlID === "1a45dfa3") this.ebmlFound = true;
@@ -95,7 +96,10 @@ export abstract class WebmBaseDemuxerTransformer implements Transformer {
     }
     offset = idData.offset;
     const sizeData = this.readTagDataSize(chunk, offset);
-    if (sizeData === TOO_SHORT) return TOO_SHORT;
+    if (sizeData === TOO_SHORT) {
+      console.log("too short 2");
+      return TOO_SHORT;
+    }
     const { dataLength } = sizeData;
     offset = sizeData.offset;
     // If this tag isn't useful, tell the stream to stop processing data until the tag ends
@@ -111,7 +115,10 @@ export abstract class WebmBaseDemuxerTransformer implements Transformer {
       return { offset };
     }
 
-    if (offset + dataLength > chunk.length) return TOO_SHORT;
+    if (offset + dataLength > chunk.length) {
+      console.log("too short 3");
+      return TOO_SHORT;
+    }
     const data = chunk.slice(offset, offset + dataLength);
     if (!this.track) {
       if (ebmlID === "ae") this.incompleteTrack = {};

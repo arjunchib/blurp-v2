@@ -51,11 +51,11 @@ export class DiscoClient {
     const hash = await sha1(JSON.stringify(commands));
     const storageKey = "commandHash";
     if (localStorage.getItem(storageKey) === hash) {
-      this.rest.bulkOverwriteGuildApplicationCommands(commands);
-      console.log("Updated commands");
+      console.log("Skipped updating commands");
     } else {
       localStorage.setItem(storageKey, hash);
-      console.log("Skipped updating commands");
+      this.rest.bulkOverwriteGuildApplicationCommands(commands);
+      console.log("Updated commands");
     }
   }
 }

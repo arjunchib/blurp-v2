@@ -7,7 +7,8 @@ A Discord framework for Deno!
 ## Todo
 
 - [ ] Voice resuming
-- [ ] Interaction helpers
 - [ ] Documentation
-- [ ] Dev server
-- [ ] Client interface
+- [ ] Meta-framework
+- [ ] Handle gateway heartbeat event
+- [ ] Disconnect on no heartbeat ack
+- [ ] VoiceConn events

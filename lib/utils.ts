@@ -1,3 +1,4 @@
+// Helpers
 export async function sha1(data: string) {
   const enc = new TextEncoder();
   const hashBuffer = await crypto.subtle.digest("SHA-1", enc.encode(data));
@@ -8,8 +9,6 @@ export async function sha1(data: string) {
   return hashHex;
 }
 
-export type OptionalPromise<T> = Promise<T> | T;
-
 export function randomNBit(numberOfBits: number) {
   return Math.floor(Math.random() * 2 ** numberOfBits);
 }
@@ -19,3 +18,17 @@ export function sleep(ms: number): Promise<void> {
     setTimeout(() => resolve(), ms);
   });
 }
+
+//Typescript helpers
+export type OptionalPromise<T> = Promise<T> | T;
+
+export type CamelToSnakeCase<S extends string> =
+  S extends `${infer T}${infer U}`
+    ? `${T extends Capitalize<T>
+        ? "_"
+        : ""}${Lowercase<T>}${CamelToSnakeCase<U>}`
+    : S;
+
+export type PascalToSnakeCase<S extends string> = CamelToSnakeCase<
+  Uncapitalize<S>
+>;

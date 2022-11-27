@@ -1,12 +1,13 @@
 import { DiscoClient } from "./client.ts";
-import { GatewayDispatchPayload, GatewaySendPayload } from "./deps.ts";
+import { GatewayReceivePayload, GatewaySendPayload } from "./deps.ts";
 import { Events } from "./events.ts";
+import { EventNames } from "./gateway_models.ts";
 import { GatewayWsConn } from "./gateway_ws_conn.ts";
 
 export class Gateway {
   private gatewayUrl?: string;
   private ws?: GatewayWsConn;
-  events = new Events<GatewayDispatchPayload["t"], GatewayDispatchPayload>();
+  events = new Events<EventNames, GatewayReceivePayload>();
 
   constructor(private client: DiscoClient) {}
 

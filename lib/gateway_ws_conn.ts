@@ -9,6 +9,7 @@ import {
   GatewaySendPayload,
 } from "./deps.ts";
 import { environment } from "./environment.ts";
+import { EventNames } from "./gateway_models.ts";
 
 export class GatewayWsConn {
   private ws!: WebSocket;
@@ -100,6 +101,16 @@ export class GatewayWsConn {
         }
         break;
     }
+    this.dispatchEvent(payload);
+  }
+
+  private dispatchEvent(payload: GatewayReceivePayload) {
+    let eventName = GatewayOpcodes[payload.op].toUpperCase();
+    if (payload.t) {
+      eventName += `_${payload.t}`;
+      this.client.gateway.events.dispatchEvent("DISPATCH", payload);
+    }
+    this.client.gateway.events.dispatchEvent(eventName as EventNames, payload);
   }
 
   private setupHeartbeat(heartbeatInterval: number) {
@@ -157,7 +168,6 @@ export class GatewayWsConn {
         localStorage.setItem("resumeGatewayUrl", this.resumeGatewayUrl);
         break;
     }
-    this.client.gateway.events.dispatchEvent(payload.t, payload);
   }
 
   private handleDisconnect(event: CloseEvent) {

@@ -1,5 +1,4 @@
 import {
-  GatewayDispatchEvents,
   GatewayInteractionCreateDispatch,
   RESTPostAPIInteractionCallbackJSONBody,
   RESTPutAPIApplicationCommandsJSONBody,
@@ -40,7 +39,7 @@ export class DiscoClient {
       await this.rest.createInteractionResponse(payload.d, res);
     };
     this.gateway.events.addEventListener(
-      GatewayDispatchEvents.InteractionCreate,
+      "DISPATCH_INTERACTION_CREATE",
       fnWrapper
     );
   }

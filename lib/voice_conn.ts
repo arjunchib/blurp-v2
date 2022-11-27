@@ -1,5 +1,4 @@
 import {
-  GatewayDispatchEvents,
   GatewayOpcodes,
   GatewayVoiceServerUpdateDispatch,
   GatewayVoiceStateUpdateDispatch,
@@ -40,11 +39,11 @@ export class VoiceConn {
   disconnect() {
     clearInterval(this.intervalId);
     this.client.gateway.events.removeEventListener(
-      GatewayDispatchEvents.VoiceStateUpdate,
+      "DISPATCH_VOICE_STATE_UPDATE",
       this.voiceServerUpdateHandler!
     );
     this.client.gateway.events.removeEventListener(
-      GatewayDispatchEvents.VoiceServerUpdate,
+      "DISPATCH_VOICE_SERVER_UPDATE",
       this.voiceServerUpdateHandler!
     );
     this.status = "closed";
@@ -72,12 +71,12 @@ export class VoiceConn {
       if (payload.d.guild_id !== this.state.guildId) return;
       this.state.sessionId = payload.d.session_id;
       this.client.gateway.events.removeEventListener(
-        GatewayDispatchEvents.VoiceStateUpdate,
+        "DISPATCH_VOICE_STATE_UPDATE",
         this.voiceStateUpdateHandler!
       );
     };
     this.client.gateway.events.addEventListener(
-      GatewayDispatchEvents.VoiceStateUpdate,
+      "DISPATCH_VOICE_STATE_UPDATE",
       this.voiceStateUpdateHandler
     );
     this.voiceServerUpdateHandler = (
@@ -88,12 +87,12 @@ export class VoiceConn {
       this.state.token = payload.d.token;
       this.state.ws = new VoiceWsConn(this.state);
       this.client.gateway.events.removeEventListener(
-        GatewayDispatchEvents.VoiceServerUpdate,
+        "DISPATCH_VOICE_SERVER_UPDATE",
         this.voiceServerUpdateHandler!
       );
     };
     this.client.gateway.events.addEventListener(
-      GatewayDispatchEvents.VoiceServerUpdate,
+      "DISPATCH_VOICE_SERVER_UPDATE",
       this.voiceServerUpdateHandler
     );
   }

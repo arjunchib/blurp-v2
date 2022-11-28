@@ -5,9 +5,10 @@ import {
   InteractionType,
 } from "../../lib/deps.ts";
 import { DiscoClient } from "../../lib/client.ts";
+import { OnInteraction } from "../../lib/mixins/on_interaction.ts";
 import ytdl from "https://deno.land/x/ytdl_core@v0.1.1/mod.ts";
 
-const disco = new DiscoClient();
+const disco = new (OnInteraction(DiscoClient))();
 
 let channelId = localStorage.getItem("channelId");
 

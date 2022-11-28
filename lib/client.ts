@@ -1,12 +1,6 @@
-import {
-  GatewayInteractionCreateDispatch,
-  RESTPostAPIInteractionCallbackJSONBody,
-  RESTPutAPIApplicationCommandsJSONBody,
-} from "./deps.ts";
 import { Gateway } from "./gateway.ts";
 import { Rest } from "./rest.ts";
 import { Voice } from "./voice.ts";
-import { OptionalPromise, sha1 } from "./utils.ts";
 
 export class DiscoClient {
   rest: Rest;
@@ -17,44 +11,5 @@ export class DiscoClient {
     this.rest = new Rest();
     this.gateway = new Gateway(this);
     this.voice = new Voice(this);
-  }
-
-  async run() {
-    await this.updateCommands([
-      {
-        name: "test",
-        description: "This is a test",
-      },
-    ]);
-    await this.gateway.connect();
-  }
-
-  onInteraction(
-    fn: (
-      payload: GatewayInteractionCreateDispatch
-    ) => OptionalPromise<RESTPostAPIInteractionCallbackJSONBody>
-  ) {
-    const fnWrapper = async (payload: GatewayInteractionCreateDispatch) => {
-      const res = await fn(payload);
-      await this.rest.createInteractionResponse(payload.d, res);
-    };
-    this.gateway.events.addEventListener(
-      "DISPATCH_INTERACTION_CREATE",
-      fnWrapper
-    );
-  }
-
-  private async updateCommands(
-    commands: RESTPutAPIApplicationCommandsJSONBody
-  ) {
-    const hash = await sha1(JSON.stringify(commands));
-    const storageKey = "commandHash";
-    if (localStorage.getItem(storageKey) === hash) {
-      console.log("Skipped updating commands");
-    } else {
-      localStorage.setItem(storageKey, hash);
-      this.rest.bulkOverwriteGuildApplicationCommands(commands);
-      console.log("Updated commands");
-    }
   }
 }

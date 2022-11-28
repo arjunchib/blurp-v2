@@ -5,8 +5,10 @@ import {
   InteractionType,
 } from "../../lib/deps.ts";
 import { DiscoClient } from "../../lib/client.ts";
+import { OnInteraction } from "../../lib/mixins/on_interaction.ts";
+import { UpdateCommands } from "../../lib/mixins/update_commands.ts";
 
-const disco = new DiscoClient();
+const disco = new (UpdateCommands(OnInteraction(DiscoClient)))();
 
 let channelId = localStorage.getItem("channelId");
 
@@ -66,4 +68,4 @@ async function play(guildId: string) {
   voiceConn.disconnect();
 }
 
-await disco.run();
+await disco.gateway.connect();

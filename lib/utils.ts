@@ -32,3 +32,6 @@ export type CamelToSnakeCase<S extends string> =
 export type PascalToSnakeCase<S extends string> = CamelToSnakeCase<
   Uncapitalize<S>
 >;
+
+// deno-lint-ignore ban-types, no-explicit-any
+export type Constructor<T = {}> = new (...args: any[]) => T;

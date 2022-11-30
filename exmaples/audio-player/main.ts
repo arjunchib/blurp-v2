@@ -8,7 +8,7 @@ import { DiscoClient } from "../../lib/client.ts";
 import { OnInteraction } from "../../lib/mixins/on_interaction.ts";
 import { UpdateCommands } from "../../lib/mixins/update_commands.ts";
 
-const disco = new (UpdateCommands(OnInteraction(DiscoClient)))();
+const disco = new (OnInteraction(DiscoClient))();
 
 let channelId = localStorage.getItem("channelId");
 

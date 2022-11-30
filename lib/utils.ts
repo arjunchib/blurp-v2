@@ -22,6 +22,7 @@ export function sleep(ms: number): Promise<void> {
 //Typescript helpers
 export type OptionalPromise<T> = Promise<T> | T;
 
+// https://stackoverflow.com/questions/60269936/typescript-convert-generic-object-from-snake-to-camel-case
 export type CamelToSnakeCase<S extends string> =
   S extends `${infer T}${infer U}`
     ? `${T extends Capitalize<T>

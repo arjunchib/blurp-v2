@@ -1,10 +1,13 @@
 import {
   ApplicationCommandOptionType,
   ApplicationCommandType,
-  InteractionResponseType,
   InteractionType,
 } from "../../../lib/deps.ts";
-import { Command, Interaction } from "../../../lib/mod.ts";
+import {
+  Command,
+  Interaction,
+  ChannelMessageWithSource,
+} from "../../../lib/mod.ts";
 
 export const command: Command = {
   name: "multiply",
@@ -41,17 +44,13 @@ export default function Multiply(interaction: Interaction) {
       b?.type !== ApplicationCommandOptionType.Number
     )
       return;
-    interaction.reply({
-      type: InteractionResponseType.ChannelMessageWithSource,
-      data: {
-        content: `${a.value * b.value}`,
-      },
-    });
+    interaction.reply(
+      <ChannelMessageWithSource
+        content={`${a.value * b.value}`}
+      ></ChannelMessageWithSource>
+    );
   }
-  interaction.reply({
-    type: InteractionResponseType.ChannelMessageWithSource,
-    data: {
-      content: "Error!",
-    },
-  });
+  interaction.reply(
+    <ChannelMessageWithSource content="Error!"></ChannelMessageWithSource>
+  );
 }

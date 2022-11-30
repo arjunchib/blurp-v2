@@ -1,0 +1,6 @@
+{
+  "imports": {
+    "disco/jsx-runtime": "../../lib/jsx-runtime.ts",
+    "disco/jsx-dev-runtime": "../../lib/jsx-runtime.ts"
+  }
+}

@@ -3,7 +3,7 @@ import { command as AddCommand, default as Add } from "./commands/add.ts";
 import {
   command as MultiplyCommand,
   default as Multiply,
-} from "./commands/multiply.ts";
+} from "./commands/multiply.tsx";
 
 start({
   commands: [

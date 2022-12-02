@@ -30,15 +30,11 @@ export const command: Command = {
 
 export default function Multiply(interaction: Interaction) {
   if (
-    interaction.payload.d.type === InteractionType.ApplicationCommand &&
-    interaction.payload.d.data.type === ApplicationCommandType.ChatInput
+    interaction.payload.type === InteractionType.ApplicationCommand &&
+    interaction.payload.data.type === ApplicationCommandType.ChatInput
   ) {
-    const a = interaction.payload.d.data.options?.find(
-      (opt) => opt.name === "a"
-    );
-    const b = interaction.payload.d.data.options?.find(
-      (opt) => opt.name === "b"
-    );
+    const a = interaction.payload.data.options?.find((opt) => opt.name === "a");
+    const b = interaction.payload.data.options?.find((opt) => opt.name === "b");
     if (
       a?.type !== ApplicationCommandOptionType.Number ||
       b?.type !== ApplicationCommandOptionType.Number

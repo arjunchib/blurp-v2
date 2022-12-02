@@ -1,5 +1,5 @@
 import { start } from "../../lib/disco.ts";
-import { command as AddCommand, default as Add } from "./commands/add.tsx";
+import { command as TestCommand, default as Test } from "./commands/test.tsx";
 import {
   command as MultiplyCommand,
   default as Multiply,
@@ -7,7 +7,7 @@ import {
 
 start({
   commands: [
-    [AddCommand, Add],
+    [TestCommand, Test],
     [MultiplyCommand, Multiply],
   ],
 });

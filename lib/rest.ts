@@ -1,6 +1,8 @@
 import {
   RESTGetAPIGatewayBotResult,
+  RESTPatchAPIInteractionOriginalResponseJSONBody,
   RESTPostAPIInteractionCallbackJSONBody,
+  RESTPostAPIInteractionFollowupJSONBody,
   RESTPutAPIApplicationCommandsJSONBody,
   RESTPutAPIApplicationCommandsResult,
 } from "./deps.ts";
@@ -52,6 +54,31 @@ export class Rest {
     const { id, token } = interaction;
     return await this.fetch(`/interactions/${id}/${token}/callback`, {
       body: JSON.stringify(interactionResponse),
+      method: "POST",
+    });
+  }
+
+  public async editOriginalInteractionResponse(
+    interaction: { token: string },
+    interactionResponse: RESTPatchAPIInteractionOriginalResponseJSONBody
+  ) {
+    const { applicationId } = environment;
+    return await this.fetch(
+      `/webhooks/${applicationId}/${interaction.token}/messages/@original`,
+      {
+        body: JSON.stringify(interactionResponse),
+        method: "PATCH",
+      }
+    );
+  }
+
+  public async createFollowupMessage(
+    interaction: { token: string },
+    body: RESTPostAPIInteractionFollowupJSONBody
+  ) {
+    const { applicationId } = environment;
+    return await this.fetch(`/webhooks/${applicationId}/${interaction.token}`, {
+      body: JSON.stringify(body),
       method: "POST",
     });
   }

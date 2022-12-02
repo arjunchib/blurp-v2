@@ -1,4 +1,4 @@
-import { start } from "../../src/disco.ts";
+import { start } from "disco";
 import { command as TestCommand, default as Test } from "./commands/test.tsx";
 import {
   command as MultiplyCommand,

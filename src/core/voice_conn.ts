@@ -2,8 +2,8 @@ import {
   GatewayOpcodes,
   GatewayVoiceServerUpdateDispatch,
   GatewayVoiceStateUpdateDispatch,
-} from "./deps.ts";
-import { WebmOpusDemuxer } from "./audio/mod.ts";
+} from "../deps.ts";
+import { WebmOpusDemuxer } from "../audio/mod.ts";
 import { DiscoClient } from "./client.ts";
 import { VoiceWsConn } from "./voice_ws_conn.ts";
 import { VoiceConnState } from "./voice_models.ts";

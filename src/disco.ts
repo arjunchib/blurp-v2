@@ -1,4 +1,4 @@
-import { DiscoClient } from "./client.ts";
+import { DiscoClient } from "./core/client.ts";
 import {
   APIInteractionResponse,
   APIInteractionResponseUpdateMessage,

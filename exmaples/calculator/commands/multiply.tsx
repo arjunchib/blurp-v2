@@ -2,12 +2,8 @@ import {
   ApplicationCommandOptionType,
   ApplicationCommandType,
   InteractionType,
-} from "../../../lib/deps.ts";
-import {
-  Command,
-  Interaction,
-  ChannelMessageWithSource,
-} from "../../../lib/mod.ts";
+} from "discord_api_types";
+import { Command, Interaction, ChannelMessageWithSource } from "disco";
 
 export const command: Command = {
   name: "multiply",

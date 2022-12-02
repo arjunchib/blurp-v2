@@ -1,47 +1,10 @@
 import { DiscoClient } from "./core/client.ts";
-import {
-  APIInteractionResponse,
-  APIInteractionResponseUpdateMessage,
-  GatewayInteractionCreateDispatch,
-  InteractionResponseType,
-  InteractionType,
-  RESTPostAPIApplicationCommandsJSONBody,
-} from "./deps.ts";
+import { GatewayInteractionCreateDispatch, InteractionType } from "./deps.ts";
+import { Interaction } from "./interaction.ts";
+import { Options } from "./types.ts";
 import { sha1 } from "./utils.ts";
 
-export type Command = RESTPostAPIApplicationCommandsJSONBody;
-
-export class Interaction {
-  constructor(
-    public payload: GatewayInteractionCreateDispatch["d"],
-    private client: DiscoClient
-  ) {}
-
-  reply(response: APIInteractionResponse) {
-    this.client.rest.createInteractionResponse(this.payload, response);
-  }
-
-  defer() {
-    const type =
-      this.payload.type === InteractionType.MessageComponent
-        ? InteractionResponseType.DeferredMessageUpdate
-        : InteractionResponseType.DeferredChannelMessageWithSource;
-    this.client.rest.createInteractionResponse(this.payload, { type });
-  }
-
-  async edit(response: APIInteractionResponseUpdateMessage) {
-    await this.client.rest.editOriginalInteractionResponse(
-      this.payload,
-      response.data ?? {}
-    );
-  }
-}
-
-interface Options {
-  commands: [Command, (Interaction: Interaction) => void][];
-}
-
-class DiscoServer {
+export class Context {
   private client = new DiscoClient();
 
   constructor(private options: Options) {
@@ -84,8 +47,4 @@ class DiscoServer {
       }
     );
   }
-}
-
-export function start(options: Options) {
-  const server = new DiscoServer(options);
 }

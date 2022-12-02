@@ -1,4 +1,4 @@
-import { randomNBit } from "./utils.ts";
+import { randomNBit } from "../utils.ts";
 import { VoiceConnState } from "./voice_models.ts";
 import {
   secretbox,

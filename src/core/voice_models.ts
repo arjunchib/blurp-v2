@@ -1,4 +1,4 @@
-import { VoiceOpcodes } from "./deps.ts";
+import { VoiceOpcodes } from "../deps.ts";
 import { VoiceUdpConn } from "./voice_udp_conn.ts";
 import { VoiceWsConn } from "./voice_ws_conn.ts";
 

@@ -7,8 +7,8 @@ import {
   GatewayOpcodes,
   GatewayReceivePayload,
   GatewaySendPayload,
-} from "./deps.ts";
-import { environment } from "./environment.ts";
+} from "../deps.ts";
+import { environment } from "../environment.ts";
 import { EventNames } from "./gateway_models.ts";
 
 export class GatewayWsConn {

@@ -11,7 +11,6 @@ type KeyHelper<E, K extends keyof E, V> = K extends unknown
     : never
   : never;
 type KeyName<E, V> = KeyHelper<E, keyof E, V>;
-type TheKeyName = KeyName<typeof GatewayOpcodes, GatewayReceivePayload["op"]>;
 
 export type EventNames =
   | Uppercase<

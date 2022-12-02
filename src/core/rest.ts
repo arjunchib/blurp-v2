@@ -5,8 +5,8 @@ import {
   RESTPostAPIInteractionFollowupJSONBody,
   RESTPutAPIApplicationCommandsJSONBody,
   RESTPutAPIApplicationCommandsResult,
-} from "./deps.ts";
-import { environment } from "./environment.ts";
+} from "../deps.ts";
+import { environment } from "../environment.ts";
 
 export class Rest {
   private readonly baseUrl: string;

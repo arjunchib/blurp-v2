@@ -1,5 +1,5 @@
-import { VoiceOpcodes } from "./deps.ts";
-import { environment } from "./environment.ts";
+import { VoiceOpcodes } from "../deps.ts";
+import { environment } from "../environment.ts";
 import {
   VoiceConnState,
   VoiceHelloPayload,

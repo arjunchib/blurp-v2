@@ -1,11 +1,11 @@
-import { DiscoClient } from "./core/client.ts";
+import { Client } from "./core/client.ts";
 import { GatewayInteractionCreateDispatch, InteractionType } from "./deps.ts";
 import { Interaction } from "./interaction.ts";
 import { Options } from "./types.ts";
 import { sha1 } from "./utils.ts";
 
 export class Context {
-  private client = new DiscoClient();
+  private client = new Client();
 
   constructor(private options: Options) {
     this.updateCommands();

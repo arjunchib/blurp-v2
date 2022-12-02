@@ -1,5 +1,5 @@
 // Base
-export { DiscoClient } from "./src/core/client.ts";
+export { Client } from "./src/core/client.ts";
 export { Interaction } from "./src/interaction.ts";
 export { start } from "./src/start.ts";
 

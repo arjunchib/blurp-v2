@@ -2,7 +2,7 @@ import { Gateway } from "./gateway.ts";
 import { Rest } from "./rest.ts";
 import { Voice } from "./voice.ts";
 
-export class DiscoClient {
+export class Client {
   rest: Rest;
   gateway: Gateway;
   voice: Voice;

@@ -1,4 +1,4 @@
-import { DiscoClient } from "./client.ts";
+import { Client } from "./client.ts";
 import { GatewayReceivePayload, GatewaySendPayload } from "../deps.ts";
 import { Events } from "../events.ts";
 import { EventNames } from "./gateway_models.ts";
@@ -9,7 +9,7 @@ export class Gateway {
   private ws?: GatewayWsConn;
   events = new Events<EventNames, GatewayReceivePayload>();
 
-  constructor(private client: DiscoClient) {}
+  constructor(private client: Client) {}
 
   async connect() {
     if (!this.gatewayUrl) {

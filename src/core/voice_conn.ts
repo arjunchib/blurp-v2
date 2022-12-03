@@ -4,7 +4,7 @@ import {
   GatewayVoiceStateUpdateDispatch,
 } from "../deps.ts";
 import { WebmOpusDemuxer } from "../audio/mod.ts";
-import { DiscoClient } from "./client.ts";
+import { Client } from "./client.ts";
 import { VoiceWsConn } from "./voice_ws_conn.ts";
 import { VoiceConnState } from "./voice_models.ts";
 
@@ -20,7 +20,7 @@ export class VoiceConn {
   ) => void;
   status: "open" | "closed" = "open";
 
-  constructor(private client: DiscoClient, private guildId: string) {
+  constructor(private client: Client, private guildId: string) {
     this.state = {
       nonce: 0,
       guildId,

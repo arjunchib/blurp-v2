@@ -1,4 +1,4 @@
-import { DiscoClient } from "./client.ts";
+import { Client } from "./client.ts";
 import {
   GatewayDispatchEvents,
   GatewayDispatchPayload,
@@ -20,7 +20,7 @@ export class GatewayWsConn {
   private resumeGatewayUrl?: string;
   private resumed = false;
 
-  constructor(private gatewayUrl: string, private client: DiscoClient) {
+  constructor(private gatewayUrl: string, private client: Client) {
     this.sessionId = localStorage.getItem("sessionId") || undefined;
     this.resumeGatewayUrl =
       localStorage.getItem("resumeGatewayUrl") || undefined;

@@ -19,6 +19,18 @@ export function sleep(ms: number): Promise<void> {
   });
 }
 
+export function replaceKeys<
+  T,
+  Old extends string | number | symbol,
+  New extends string | number | symbol
+>(object: T, oldKey: Old, newKey: New): ReplaceKeys<T, Old, New> {
+  const { [oldKey]: oldValue, ...rest } = object;
+  return {
+    ...rest,
+    [newKey]: oldValue,
+  } as unknown as ReplaceKeys<T, Old, New>;
+}
+
 //Typescript helpers
 export type OptionalPromise<T> = Promise<T> | T;
 
@@ -38,6 +50,20 @@ export type PascalToSnakeCase<S extends string> = CamelToSnakeCase<
 export type Constructor<T = {}> = new (...args: any[]) => T;
 
 // https://stackoverflow.com/questions/57103834/typescript-omit-a-property-from-all-interfaces-in-a-union-but-keep-the-union-s
-type DistributiveOmit<T, K extends keyof any> = T extends any
+export type DistributiveOmit<T, K extends keyof any> = T extends any
   ? Omit<T, K>
   : never;
+
+export type Replace<
+  T extends string | number | symbol,
+  Old extends string | number | symbol,
+  New extends string | number | symbol
+> = T extends Old ? New : T;
+
+export type ReplaceKeys<
+  T,
+  Old extends string | number | symbol,
+  New extends string | number | symbol
+> = {
+  [P in keyof T as Replace<P, Old, New>]: T[P];
+};

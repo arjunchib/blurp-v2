@@ -21,11 +21,12 @@ export function ChannelMessageWithSource(
   props: ChannelMessageWithSourceProps
 ): APIInteractionResponseChannelMessageWithSource {
   const { children } = props;
-  const components = Array.isArray(children)
-    ? children
-    : ([
-        children,
-      ] as APIInteractionResponseChannelMessageWithSource["data"]["components"]);
+  const components =
+    Array.isArray(children) || children == null
+      ? children
+      : ([
+          children,
+        ] as APIInteractionResponseChannelMessageWithSource["data"]["components"]);
   delete props.children;
   const data = {
     ...props,

@@ -36,8 +36,11 @@ export class Context {
         let name: string | undefined = undefined;
         if (type == InteractionType.ApplicationCommand) {
           name = payload.d.data.name;
-        } else if (type === InteractionType.MessageComponent) {
-          name = payload.d.message.interaction?.name;
+        } else if (
+          type === InteractionType.MessageComponent ||
+          type === InteractionType.ModalSubmit
+        ) {
+          name = payload.d.data.custom_id.split(":")[0];
         }
         const command = this.options.commands.find(
           (cmd) => cmd[0].name === name

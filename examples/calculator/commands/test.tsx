@@ -26,21 +26,21 @@ export default async function Test(interaction: Interaction) {
     interaction.reply(
       <ChannelMessageWithSource>
         <ActionRow>
-          <Button style={ButtonStyle.Primary} custom_id="myButton">
+          <Button style={ButtonStyle.Primary} custom_id="test:button">
             Click me!
           </Button>
-          <Button style={ButtonStyle.Danger} custom_id="myAsyncButton">
+          <Button style={ButtonStyle.Danger} custom_id="test:asyncButton">
             Click me asynchronously!
           </Button>
         </ActionRow>
       </ChannelMessageWithSource>
     );
   } else if (type === InteractionType.MessageComponent) {
-    if (interaction.payload.data.custom_id === "myButton") {
+    if (interaction.payload.data.custom_id === "test:button") {
       interaction.reply(
         <UpdateMessage content="Button Clicked"></UpdateMessage>
       );
-    } else if (interaction.payload.data.custom_id === "myAsyncButton") {
+    } else if (interaction.payload.data.custom_id === "test:asyncButton") {
       interaction.defer();
       await sleep(2000);
       await interaction.edit(

@@ -1,4 +1,4 @@
-import { DiscoClient } from "./core/client.ts";
+import { Client } from "./core/client.ts";
 import {
   APIInteractionResponse,
   APIInteractionResponseUpdateMessage,
@@ -10,7 +10,7 @@ import {
 export class Interaction {
   constructor(
     public payload: GatewayInteractionCreateDispatch["d"],
-    private client: DiscoClient
+    private client: Client
   ) {}
 
   reply(response: APIInteractionResponse) {

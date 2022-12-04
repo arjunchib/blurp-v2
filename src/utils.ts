@@ -36,3 +36,8 @@ export type PascalToSnakeCase<S extends string> = CamelToSnakeCase<
 
 // deno-lint-ignore ban-types, no-explicit-any
 export type Constructor<T = {}> = new (...args: any[]) => T;
+
+// https://stackoverflow.com/questions/57103834/typescript-omit-a-property-from-all-interfaces-in-a-union-but-keep-the-union-s
+type DistributiveOmit<T, K extends keyof any> = T extends any
+  ? Omit<T, K>
+  : never;

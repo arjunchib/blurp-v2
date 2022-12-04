@@ -24,8 +24,10 @@ export class Rest {
       ...init,
     });
     try {
-      return await res.json();
+      const data = await res.json();
+      return data;
     } catch (_e) {
+      console.log(await res.text());
       return {} as T;
     }
   }

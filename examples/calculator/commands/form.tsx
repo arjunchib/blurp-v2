@@ -21,14 +21,9 @@ export default function Form(interaction: Interaction) {
         </ActionRow>
       </Modal>
     );
-    console.log(modal);
     interaction.reply(modal);
   } else if (interaction.payload.type === InteractionType.ModalSubmit) {
-    console.log("hi");
     const data = interaction.payload.data.components[0].components[0].value;
-    console.log(
-      <ChannelMessageWithSource content={data}></ChannelMessageWithSource>
-    );
     interaction.reply(
       <ChannelMessageWithSource content={data}></ChannelMessageWithSource>
     );

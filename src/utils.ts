@@ -31,6 +31,17 @@ export function replaceKeys<
   } as unknown as ReplaceKeys<T, Old, New>;
 }
 
+export function replaceChildren<
+  T extends { children?: any },
+  Key extends string | number | symbol
+>(props: T, key: Key) {
+  const keyNeedsWrapping = ["options", "components"].includes(key as string);
+  if (keyNeedsWrapping && props.children && !Array.isArray(props.children)) {
+    props.children = [props.children];
+  }
+  return replaceKeys(props, "children", key);
+}
+
 //Typescript helpers
 export type OptionalPromise<T> = Promise<T> | T;
 

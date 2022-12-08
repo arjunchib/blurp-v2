@@ -5,7 +5,7 @@ type TextInputProps = DistributiveOmit<APITextInputComponent, "type">;
 
 export function TextInput(props: TextInputProps): APITextInputComponent {
   return {
-    ...props,
     type: ComponentType.TextInput,
+    ...props,
   };
 }

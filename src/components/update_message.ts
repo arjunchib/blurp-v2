@@ -1,43 +1,21 @@
 import {
-  APIInteractionResponseChannelMessageWithSource,
+  APIInteractionResponseCallbackData,
   APIInteractionResponseUpdateMessage,
   InteractionResponseType,
 } from "../deps.ts";
+import { replaceChildren, ReplaceKeys } from "../utils.ts";
 
-type UnwrapArray<T extends any[] | undefined> = NonNullable<T>[0];
-
-interface UpdateMessageChildren {
-  children?:
-    | NonNullable<APIInteractionResponseUpdateMessage["data"]>["components"]
-    | UnwrapArray<
-        NonNullable<APIInteractionResponseUpdateMessage["data"]>["components"]
-      >;
-}
-
-type UpdateMessageProps = Omit<
-  NonNullable<APIInteractionResponseUpdateMessage["data"]>,
-  "components"
-> &
-  UpdateMessageChildren;
+type UpdateMessageProps = ReplaceKeys<
+  APIInteractionResponseCallbackData,
+  "components",
+  "children"
+>;
 
 export function UpdateMessage(
   props: UpdateMessageProps
 ): APIInteractionResponseUpdateMessage {
-  const { children } = props;
-  const components = children
-    ? Array.isArray(children)
-      ? children
-      : ([
-          children,
-        ] as APIInteractionResponseChannelMessageWithSource["data"]["components"])
-    : undefined;
-  delete props.children;
-  const data = {
-    ...props,
-    components,
-  };
   return {
     type: InteractionResponseType.UpdateMessage,
-    data,
+    data: replaceChildren(props, "components"),
   };
 }

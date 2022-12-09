@@ -32,6 +32,7 @@ export function replaceKeys<
 }
 
 export function replaceChildren<
+  // deno-lint-ignore no-explicit-any
   T extends { children?: any },
   Key extends string | number | symbol
 >(props: T, key: Key) {
@@ -61,6 +62,7 @@ export type PascalToSnakeCase<S extends string> = CamelToSnakeCase<
 export type Constructor<T = {}> = new (...args: any[]) => T;
 
 // https://stackoverflow.com/questions/57103834/typescript-omit-a-property-from-all-interfaces-in-a-union-but-keep-the-union-s
+// deno-lint-ignore no-explicit-any
 export type DistributiveOmit<T, K extends keyof any> = T extends any
   ? Omit<T, K>
   : never;

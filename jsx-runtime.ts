@@ -1,3 +1,4 @@
+// deno-lint-ignore-file ban-types no-explicit-any
 export function jsx(tag: Function, props: any) {
   return tag(props);
 }

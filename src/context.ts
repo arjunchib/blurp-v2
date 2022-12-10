@@ -1,4 +1,3 @@
-import { dirname } from "https://deno.land/std@0.167.0/path/win32.ts";
 import { Client } from "./core/client.ts";
 import {
   GatewayInteractionCreateDispatch,
@@ -9,6 +8,7 @@ import {
 import { Interaction } from "./interaction.ts";
 import { Options } from "./types.ts";
 import { sha1 } from "./utils.ts";
+import { logger } from "./logger.ts";
 
 export class Context {
   private client = new Client();
@@ -37,7 +37,6 @@ export class Context {
         const { default: fn, command } = await import(
           `${commandDir}/${dirEntry.name}`
         );
-        console.log(fn, command);
         this.commands.push([command, fn]);
       }
     }
@@ -45,16 +44,14 @@ export class Context {
 
   private async updateCommands() {
     const commands = this.commands.map((c) => c[0]);
-    console.log(commands);
     const hash = await sha1(JSON.stringify(commands));
     const storageKey = "commandHash";
-    console.log(localStorage.getItem(storageKey), hash);
     if (localStorage.getItem(storageKey) === hash) {
-      console.log("Skipped updating commands");
+      logger.base.info("Skipped updating commands");
     } else {
       localStorage.setItem(storageKey, hash);
       this.client.rest.bulkOverwriteGuildApplicationCommands(commands);
-      console.log("Updated commands");
+      logger.base.info("Updated commands");
     }
   }
 

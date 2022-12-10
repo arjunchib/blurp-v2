@@ -7,6 +7,7 @@ import {
   RESTPutAPIApplicationCommandsResult,
 } from "../deps.ts";
 import { environment } from "../environment.ts";
+import { logger } from "../logger.ts";
 
 export class Rest {
   private readonly baseUrl: string;
@@ -16,6 +17,7 @@ export class Rest {
   }
 
   private async fetch<T>(url: string, init?: RequestInit): Promise<T> {
+    logger.rest.debug(`${init?.method || "GET"} ${url} ${init?.body || ""}`);
     const res = await fetch(`${this.baseUrl}${url}`, {
       headers: {
         Authorization: `Bot ${environment.token}`,
@@ -25,9 +27,10 @@ export class Rest {
     });
     try {
       const data = await res.json();
+      logger.rest.debug(`${url} ${data}`);
       return data;
     } catch (_e) {
-      console.log(await res.text());
+      logger.rest.error(await res.text());
       return {} as T;
     }
   }

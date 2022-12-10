@@ -1,9 +1,6 @@
-import { RESTPostAPIApplicationCommandsJSONBody } from "./deps.ts";
-import { Interaction } from "./interaction.ts";
+import { LevelName, LogConfig } from "https://deno.land/std@0.167.0/log/mod.ts";
 
 export interface Options {
-  commands?: [Command, (Interaction: Interaction) => void][];
   commandDir?: string;
+  logs?: LogConfig | LevelName | false;
 }
-
-export type Command = RESTPostAPIApplicationCommandsJSONBody;

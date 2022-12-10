@@ -10,6 +10,7 @@ import {
 } from "../deps.ts";
 import { environment } from "../environment.ts";
 import { EventNames } from "./gateway_models.ts";
+import { logger } from "../logger.ts";
 
 export class GatewayWsConn {
   private ws!: WebSocket;
@@ -28,13 +29,12 @@ export class GatewayWsConn {
     if (seq) {
       this.seq = parseInt(seq);
     }
-    console.log(this.sessionId, this.resumeGatewayUrl, this.seq);
     const tryResuming = !!this.sessionId && !!this.resumeGatewayUrl;
     this.connect(tryResuming);
   }
 
   send(payload: GatewaySendPayload) {
-    console.log("Sent", GatewayOpcodes[payload.op]);
+    logger.gateway.debug(`Sent ${GatewayOpcodes[payload.op]}`);
     this.ws.send(JSON.stringify(payload));
   }
 
@@ -55,20 +55,20 @@ export class GatewayWsConn {
     });
     this.ws = new WebSocket(new URL(`${url}?${params}`));
     this.ws.addEventListener("open", () => {
-      console.log("Gateway opened");
       if (resume) {
         this.resume();
       }
     });
-    this.ws.addEventListener("message", async (event) => {
-      await this.handleMessage(JSON.parse(event.data));
+    this.ws.addEventListener("message", (event) => {
+      this.handleMessage(JSON.parse(event.data));
     });
     this.ws.addEventListener("close", (event) => {
       this.handleDisconnect(event);
-      console.log("Gateway closed", event.reason);
+      logger.gateway.info(`Gateway closed ${event.reason}`);
     });
     this.ws.addEventListener("error", (event) => {
-      console.log("Error", event);
+      const msg = event instanceof ErrorEvent ? event.message : "";
+      logger.gateway.error(`Gateway error ${msg}`);
     });
   }
 
@@ -77,13 +77,14 @@ export class GatewayWsConn {
     localStorage.setItem("seq", this.seq?.toString() || "");
     const log = ["Received", GatewayOpcodes[payload.op]];
     if (payload.op === GatewayOpcodes.Dispatch) log.push(`(${payload.t})`);
-    console.log(...log);
+    logger.gateway.debug(log.join(" "));
     switch (payload.op) {
       case GatewayOpcodes.Hello:
-        console.log("Resumed", this.resumed);
         if (this.resumed) {
+          logger.gateway.info("Gateway resumed");
           this.resumeHeartbeat(payload.d.heartbeat_interval);
         } else {
+          logger.gateway.info("Gateway connected");
           this.setupHeartbeat(payload.d.heartbeat_interval);
         }
         break;

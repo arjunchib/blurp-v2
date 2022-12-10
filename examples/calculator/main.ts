@@ -1,3 +1,5 @@
 import { start } from "disco";
 
-await start();
+await start({
+  logs: "DEBUG",
+});

@@ -17,20 +17,31 @@ export class Rest {
   }
 
   private async fetch<T>(url: string, init?: RequestInit): Promise<T> {
-    logger.rest.debug(`${init?.method || "GET"} ${url} ${init?.body || ""}`);
-    const res = await fetch(`${this.baseUrl}${url}`, {
-      headers: {
-        Authorization: `Bot ${environment.token}`,
-        "Content-Type": "application/json",
-      },
-      ...init,
-    });
     try {
-      const data = await res.json();
-      logger.rest.debug(`${url} ${data}`);
-      return data;
-    } catch (_e) {
-      logger.rest.error(await res.text());
+      logger.rest.debug(`${init?.method || "GET"} ${url} ${init?.body || ""}`);
+      const res = await fetch(`${this.baseUrl}${url}`, {
+        headers: {
+          Authorization: `Bot ${environment.token}`,
+          "Content-Type": "application/json",
+        },
+        ...init,
+      });
+      const isJSON = res.headers
+        .get("Content-Type")
+        ?.startsWith("application/json");
+      if (res.ok && isJSON) {
+        const data = await res.json();
+        logger.rest.debug(
+          `${res.status} ${res.statusText} ${JSON.stringify(data)}`
+        );
+        return data;
+      } else {
+        const msg = `${res.status} ${res.statusText} ${await res.text()}`;
+        res.ok ? logger.rest.debug(msg) : logger.rest.error(msg);
+        return {} as T;
+      }
+    } catch (e) {
+      logger.rest.error(e);
       return {} as T;
     }
   }

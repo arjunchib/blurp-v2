@@ -86,7 +86,6 @@ export abstract class WebmBaseDemuxerTransformer implements Transformer {
     | typeof TOO_SHORT {
     const idData = this.readEBMLId(chunk, offset);
     if (idData === TOO_SHORT) {
-      console.log("too short 1");
       return TOO_SHORT;
     }
     const ebmlID = toHex(idData.id);
@@ -97,7 +96,6 @@ export abstract class WebmBaseDemuxerTransformer implements Transformer {
     offset = idData.offset;
     const sizeData = this.readTagDataSize(chunk, offset);
     if (sizeData === TOO_SHORT) {
-      console.log("too short 2");
       return TOO_SHORT;
     }
     const { dataLength } = sizeData;
@@ -116,7 +114,6 @@ export abstract class WebmBaseDemuxerTransformer implements Transformer {
     }
 
     if (offset + dataLength > chunk.length) {
-      console.log("too short 3");
       return TOO_SHORT;
     }
     const data = chunk.slice(offset, offset + dataLength);

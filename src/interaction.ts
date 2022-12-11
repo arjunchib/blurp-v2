@@ -14,7 +14,6 @@ export class Interaction {
   ) {}
 
   reply(response: APIInteractionResponse) {
-    console.log(JSON.stringify(response));
     this.client.rest.createInteractionResponse(this.payload, response);
   }
 
@@ -27,7 +26,6 @@ export class Interaction {
   }
 
   async edit(response: APIInteractionResponseUpdateMessage) {
-    console.log(response);
     await this.client.rest.editOriginalInteractionResponse(
       this.payload,
       response.data ?? {}

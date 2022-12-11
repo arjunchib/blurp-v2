@@ -34,8 +34,8 @@ function setupLogger(logs: Options["logs"]) {
   });
 }
 
-export async function start(options?: Options) {
+export async function start(options: Options) {
   setupLogger(options?.logs);
-  const ctx = new Context(options || {});
+  const ctx = new Context(options);
   await ctx.start();
 }

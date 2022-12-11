@@ -20,26 +20,17 @@ export class Context {
   constructor(private options: Options) {}
 
   async start() {
-    await this.getCommands();
+    this.getCommands();
     const updateCommandsPromise = this.updateCommands();
     this.setupInteractions();
     this.client.gateway.connect();
     await updateCommandsPromise;
   }
 
-  private async getCommands() {
-    const commandDir = join(
-      Deno.cwd(),
-      this.options.commandDir || "./commands"
-    );
-    for await (const dirEntry of Deno.readDir(commandDir)) {
-      if (dirEntry.isFile) {
-        const { default: fn, command } = await import(
-          `${commandDir}/${dirEntry.name}`
-        );
-        this.commands.push([command, fn]);
-      }
-    }
+  private getCommands() {
+    this.options.commands.forEach((c) => {
+      this.commands.push([c.command, c.default]);
+    });
   }
 
   private async updateCommands() {
@@ -68,6 +59,7 @@ export class Context {
           type === InteractionType.ModalSubmit
         ) {
           name = payload.d.data.custom_id.split(":")[0];
+          console.log(name);
         }
         const command = this.commands.find((cmd) => cmd[0].name === name);
         const interaction = new Interaction(payload.d, this.client);

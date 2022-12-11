@@ -29,7 +29,7 @@ export default async function Test(interaction: Interaction) {
           <Button style={ButtonStyle.Primary} custom_id="test:button">
             Click me!
           </Button>
-          <Button style={ButtonStyle.Danger} custom_id="myAsyncButton">
+          <Button style={ButtonStyle.Danger} custom_id="test:asyncButton">
             Click me asynchronously!
           </Button>
         </ActionRow>

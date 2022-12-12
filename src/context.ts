@@ -3,12 +3,12 @@ import {
   GatewayInteractionCreateDispatch,
   InteractionType,
   RESTPostAPIApplicationCommandsJSONBody,
-  join,
 } from "./deps.ts";
 import { Interaction } from "./interaction.ts";
 import { Options } from "./types.ts";
 import { sha1 } from "./utils.ts";
 import { logger } from "./logger.ts";
+import { environment } from "./environment.ts";
 
 export class Context {
   private client = new Client();
@@ -20,11 +20,22 @@ export class Context {
   constructor(private options: Options) {}
 
   async start() {
+    this.checkEnvironment();
     this.getCommands();
     const updateCommandsPromise = this.updateCommands();
     this.setupInteractions();
     this.client.gateway.connect();
     await updateCommandsPromise;
+  }
+
+  private checkEnvironment() {
+    if (
+      !environment.applicationId ||
+      !environment.guildId ||
+      !environment.token
+    ) {
+      throw new Error("Environment variables not set");
+    }
   }
 
   private getCommands() {

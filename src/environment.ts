@@ -6,8 +6,8 @@ const API_VERSION = 10;
 
 export const environment = {
   version: API_VERSION,
-  token: TOKEN,
-  applicationId: APPLICATION_ID,
-  guildId: GUILD_ID,
-  publicKey: PUBLIC_KEY,
+  token: Deno.env.get("TOKEN") || TOKEN,
+  applicationId: Deno.env.get("APPLICATION_ID") || APPLICATION_ID,
+  guildId: Deno.env.get("GUILD_ID") || GUILD_ID,
+  publicKey: Deno.env.get("PUBLIC_KEY") || PUBLIC_KEY,
 };

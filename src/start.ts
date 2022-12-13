@@ -30,6 +30,7 @@ function setupLogger(logs: Options["logs"]) {
       discoVoice: defaultLogger,
       discoRest: defaultLogger,
       discoGateway: defaultLogger,
+      discoWebhook: defaultLogger,
     },
   });
 }

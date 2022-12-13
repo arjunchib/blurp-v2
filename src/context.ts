@@ -1,21 +1,19 @@
 import { Client } from "./core/client.ts";
 import {
+  APIInteraction,
   GatewayInteractionCreateDispatch,
   InteractionType,
-  RESTPostAPIApplicationCommandsJSONBody,
 } from "./deps.ts";
-import { Interaction } from "./interaction.ts";
-import { Options } from "./types.ts";
+import { GatewayInteraction } from "./interaction/gateway-interaction.ts";
+import { WebhookInteraction } from "./interaction/webhook-interaction.ts";
+import { Command, Handler, Options } from "./types.ts";
 import { sha1 } from "./utils.ts";
 import { logger } from "./logger.ts";
 import { environment } from "./environment.ts";
 
 export class Context {
   private client = new Client();
-  private commands: [
-    RESTPostAPIApplicationCommandsJSONBody,
-    (Interaction: Interaction) => void
-  ][] = [];
+  private commands: [Command, Handler][] = [];
 
   constructor(private options: Options) {}
 
@@ -23,17 +21,19 @@ export class Context {
     this.checkEnvironment();
     this.getCommands();
     const updateCommandsPromise = this.updateCommands();
-    this.setupInteractions();
-    this.client.gateway.connect();
+    if (this.options.useWebhooks) {
+      await this.setupWebhook();
+    } else {
+      this.setupGateway();
+    }
     await updateCommandsPromise;
   }
 
   private checkEnvironment() {
-    if (
-      !environment.applicationId ||
-      !environment.guildId ||
-      !environment.token
-    ) {
+    const hasGatewayEnv =
+      environment.applicationId && environment.guildId && environment.token;
+    const hasWebhookEnv = environment.publicKey;
+    if (!hasGatewayEnv && !hasWebhookEnv) {
       throw new Error("Environment variables not set");
     }
   }
@@ -57,25 +57,38 @@ export class Context {
     }
   }
 
-  private setupInteractions() {
+  private setupGateway() {
+    this.client.gateway.connect();
     this.client.gateway.events.addEventListener(
       "DISPATCH_INTERACTION_CREATE",
       (payload: GatewayInteractionCreateDispatch) => {
-        const { type } = payload.d;
-        let name: string | undefined = undefined;
-        if (type == InteractionType.ApplicationCommand) {
-          name = payload.d.data.name;
-        } else if (
-          type === InteractionType.MessageComponent ||
-          type === InteractionType.ModalSubmit
-        ) {
-          name = payload.d.data.custom_id.split(":")[0];
-          console.log(name);
-        }
-        const command = this.commands.find((cmd) => cmd[0].name === name);
-        const interaction = new Interaction(payload.d, this.client);
-        command?.[1](interaction);
+        const interaction = new GatewayInteraction(payload.d, this.client);
+        this.resolveCommand(payload.d)?.(interaction);
       }
     );
+  }
+
+  private async setupWebhook() {
+    await this.client.webhook.serve(async (apiInteraction) => {
+      const interaction = new WebhookInteraction(apiInteraction, this.client);
+      this.resolveCommand(apiInteraction)?.(interaction);
+      return await interaction.response;
+    });
+  }
+
+  private resolveCommand(interaction: APIInteraction): Handler | undefined {
+    const { type } = interaction;
+    let name: string | undefined = undefined;
+    if (type == InteractionType.ApplicationCommand) {
+      name = interaction.data.name;
+    } else if (
+      type === InteractionType.MessageComponent ||
+      type === InteractionType.ModalSubmit
+    ) {
+      name = interaction.data.custom_id.split(":")[0];
+      console.log(name);
+    }
+    const command = this.commands.find((cmd) => cmd[0].name === name);
+    return command?.[1];
   }
 }

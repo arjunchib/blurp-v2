@@ -1,6 +1,5 @@
 // Base
 export { Client } from "./src/core/client.ts";
-export { Interaction } from "./src/interaction.ts";
 export { start } from "./src/start.ts";
 
 // Components
@@ -15,3 +14,4 @@ export { SelectOption } from "./src/components/select_option.ts";
 
 // Types
 export type { Command } from "./src/types.ts";
+export type { Interaction } from "./src/interaction/interaction.ts";

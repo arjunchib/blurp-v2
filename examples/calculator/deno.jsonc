@@ -3,5 +3,6 @@
     "jsx": "react-jsx",
     "jsxImportSource": "disco"
   },
-  "importMap": "import_map.json"
+  "importMap": "import_map.json",
+  "tasks": { "dev": "deno run -A --watch --unstable main.ts" }
 }

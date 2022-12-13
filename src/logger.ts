@@ -14,6 +14,9 @@ class Logger {
   get rest() {
     return getLogger("discoRest");
   }
+  get webhook() {
+    return getLogger("discoWebhook");
+  }
 }
 
 export const logger = new Logger();

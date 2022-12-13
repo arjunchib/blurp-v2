@@ -7,4 +7,5 @@ import * as Test from "./commands/test.tsx";
 await start({
   commands: [ColorPicker, Form, Multiply, Test],
   logs: "DEBUG",
+  useWebhooks: true,
 });

@@ -5,9 +5,11 @@ import { RESTPostAPIApplicationCommandsJSONBody } from "./deps.ts";
 export interface Options {
   commands: {
     command: Command;
-    default: (interaction: Interaction) => void;
+    default: Handler;
   }[];
   logs?: LogConfig | LevelName | false;
+  useWebhooks?: boolean;
 }
 
 export type Command = RESTPostAPIApplicationCommandsJSONBody;
+export type Handler = (Interaction: Interaction) => void;

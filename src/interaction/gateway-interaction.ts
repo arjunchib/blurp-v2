@@ -1,18 +1,11 @@
-import { Client } from "./core/client.ts";
+import { Interaction } from "./interaction.ts";
 import {
   APIInteractionResponse,
-  APIInteractionResponseUpdateMessage,
-  GatewayInteractionCreateDispatch,
   InteractionResponseType,
   InteractionType,
-} from "./deps.ts";
+} from "../deps.ts";
 
-export class Interaction {
-  constructor(
-    public payload: GatewayInteractionCreateDispatch["d"],
-    private client: Client
-  ) {}
-
+export class GatewayInteraction extends Interaction {
   reply(response: APIInteractionResponse) {
     this.client.rest.createInteractionResponse(this.payload, response);
   }
@@ -23,12 +16,5 @@ export class Interaction {
         ? InteractionResponseType.DeferredMessageUpdate
         : InteractionResponseType.DeferredChannelMessageWithSource;
     this.client.rest.createInteractionResponse(this.payload, { type });
-  }
-
-  async edit(response: APIInteractionResponseUpdateMessage) {
-    await this.client.rest.editOriginalInteractionResponse(
-      this.payload,
-      response.data ?? {}
-    );
   }
 }

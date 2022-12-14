@@ -9,6 +9,9 @@ import {
 import { logger } from "../logger.ts";
 import { OptionalPromise } from "../utils.ts";
 import { environment } from "../environment.ts";
+import { serve as httpServe } from "https://deno.land/std@0.167.0/http/server.ts";
+
+const serve = Deno.serve || httpServe;
 
 /** Converts a hexadecimal string to Uint8Array. */
 function hexToUint8Array(hex: string) {
@@ -21,11 +24,14 @@ type Handler = (
 
 export class Webhook {
   async serve(handler: Handler) {
-    return await Deno.serve(async (req) => {
-      const res = await this.handleWebhook(req, handler);
-      logger.webhook.debug(`${req.method} ${res.status} ${res.statusText}`);
-      return res;
-    });
+    return await serve(
+      async (req) => {
+        const res = await this.handleWebhook(req, handler);
+        logger.webhook.debug(`${req.method} ${res.status} ${res.statusText}`);
+        return res;
+      },
+      { port: 9000 }
+    );
   }
 
   private async handleWebhook(req: Request, handler: Handler) {

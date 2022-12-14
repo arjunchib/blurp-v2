@@ -92,7 +92,6 @@ export class Context {
       type === InteractionType.ModalSubmit
     ) {
       name = interaction.data.custom_id.split(":")[0];
-      console.log(name);
     }
     const command = this.commands.find((cmd) => cmd[0].name === name);
     return command?.[1];

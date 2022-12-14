@@ -75,6 +75,7 @@ export class Webhook {
       });
     } else {
       const res = await handler(interaction);
+      logger.webhook.debug(JSON.stringify(res));
       return new Response(JSON.stringify(res), {
         status: 200,
         headers: { "Content-Type": "application/json" },
@@ -96,9 +97,8 @@ export class Webhook {
     const valid = nacl.sign.detached.verify(
       new TextEncoder().encode(timestamp + body),
       hexToUint8Array(signature),
-      hexToUint8Array(environment.publicKey)
+      hexToUint8Array(environment.publicKey!)
     );
-
     return { valid, body };
   }
 }

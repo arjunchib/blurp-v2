@@ -49,15 +49,15 @@ export class Context {
     const hash = await sha1(JSON.stringify(commands));
     const storageKey = "commandHash";
     // Bail out if no localStorage (i.e. deno deploy)
-    if (!localStorage) {
+    if (!window.localStorage) {
       this.client.rest.bulkOverwriteGuildApplicationCommands(commands);
       logger.base.info("Updated commands");
       return;
     }
-    if (localStorage.getItem(storageKey) === hash) {
+    if (window.localStorage.getItem(storageKey) === hash) {
       logger.base.info("Skipped updating commands");
     } else {
-      localStorage.setItem(storageKey, hash);
+      window.localStorage.setItem(storageKey, hash);
       this.client.rest.bulkOverwriteGuildApplicationCommands(commands);
       logger.base.info("Updated commands");
     }

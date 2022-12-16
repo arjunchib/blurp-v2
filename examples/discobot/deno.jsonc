@@ -4,5 +4,8 @@
     "jsxImportSource": "disco"
   },
   "importMap": "import_map.json",
-  "tasks": { "dev": "deno run -A --watch --unstable main.ts" }
+  "tasks": {
+    "dev": "deno run -A --watch -- main.ts --dev",
+    "upload": "deno run -A -- main.ts --upload"
+  }
 }

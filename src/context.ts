@@ -10,23 +10,34 @@ import { Command, Handler, Options } from "./types.ts";
 import { sha1 } from "./utils.ts";
 import { logger } from "./logger.ts";
 import { environment } from "./environment.ts";
+import { parse } from "https://deno.land/std@0.168.0/flags/mod.ts";
 
 export class Context {
   private client = new Client();
   private commands: [Command, Handler][] = [];
+  private flags = parse(Deno.args, {
+    boolean: ["dev", "upload"],
+  });
 
   constructor(private options: Options) {}
 
   async start() {
     this.checkEnvironment();
     this.getCommands();
-    const updateCommandsPromise = this.updateCommands();
+    if (this.flags.dev || this.flags.upload) {
+      await this.updateCommands();
+    }
+    if (!this.flags.upload) {
+      await this.setup();
+    }
+  }
+
+  private async setup() {
     if (this.options.useWebhooks) {
       await this.setupWebhook();
     } else {
       this.setupGateway();
     }
-    await updateCommandsPromise;
   }
 
   private checkEnvironment() {

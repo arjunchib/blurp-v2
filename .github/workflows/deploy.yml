@@ -6,6 +6,10 @@ on:
 jobs:
   deno-deploy:
     runs-on: ubuntu-latest
+    env:
+      GUILD_ID: ${{ secrets.GUILD_ID }}
+      APPLICATION_ID: ${{ secrets.DENO_DEPLOY_APPLICATION_ID }}
+      TOKEN: ${{ secrets.DENO_DEPLOY_TOKEN }}
     steps:
       - uses: actions/checkout@v3
       - uses: denoland/setup-deno@v1

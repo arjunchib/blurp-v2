@@ -12,6 +12,10 @@ await build({
       name: "./jsx-runtime",
       path: "./jsx-runtime.ts",
     },
+    {
+      name: "./jsx-dev-runtime",
+      path: "./jsx-dev-runtime.ts",
+    },
   ],
   outDir: BUILD_DIR,
   test: false,

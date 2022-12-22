@@ -6,7 +6,6 @@ import {
 } from "@disco/bun";
 import { Command, Interaction } from "@disco/common";
 import { ButtonStyle, InteractionType } from "discord-api-types/v10";
-// import { jsxDev as _jsx } from "@disco/bun/jsx-dev-runtime";
 
 export const command: Command = {
   name: "test",

@@ -5,7 +5,7 @@
     "lib": ["ES2021"],
     "target": "ES2021",
     "module": "es2022",
-    "moduleResolution": "node",
+    "moduleResolution": "nodenext",
     "types": ["@cloudflare/workers-types"],
     "resolveJsonModule": true,
     "noEmit": true,
@@ -13,17 +13,9 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "skipLibCheck": true,
-    // Needed locally for VSCode
-    "baseUrl": ".",
-    "paths": {
-      "@disco/cloudflare/jsx-runtime": ["../../jsx-runtime.ts"]
-    }
+    "skipLibCheck": true
   },
-
   "ts-node": {
     "transpileOnly": true
-    // "files": true,
-    // "compilerOptions": {}
   }
 }

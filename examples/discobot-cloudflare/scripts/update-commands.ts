@@ -1,5 +1,6 @@
 import { updateCommands } from "@disco/node";
 import * as Test from "../src/test.jsx";
-console.log(Test);
+
+console.log();
 
 await updateCommands([Test]);

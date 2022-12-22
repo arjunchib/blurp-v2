@@ -1,0 +1,13 @@
+{
+  "name": "discobot-bun",
+  "module": "index.ts",
+  "type": "module",
+  "dependencies": {
+    "@disco/bun": "file:../../packages/bun",
+    "@disco/common": "file:../../packages/common",
+    "discord-api-types": "^0.37.24"
+  },
+  "devDependencies": {
+    "bun-types": "^0.3.0"
+  }
+}

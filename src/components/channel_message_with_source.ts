@@ -13,6 +13,7 @@ type ChannelMessageWithSourceProps = ReplaceKeys<
 export function ChannelMessageWithSource(
   props: ChannelMessageWithSourceProps
 ): APIInteractionResponseChannelMessageWithSource {
+  console.log(props);
   return {
     type: InteractionResponseType.ChannelMessageWithSource,
     data: replaceChildren(props, "components"),

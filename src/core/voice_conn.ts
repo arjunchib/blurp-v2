@@ -4,9 +4,9 @@ import {
   GatewayVoiceStateUpdateDispatch,
 } from "../deps.ts";
 import { WebmOpusDemuxer } from "../audio/mod.ts";
-import { Client } from "./client.ts";
 import { VoiceWsConn } from "./voice_ws_conn.ts";
 import { VoiceConnState } from "./voice_models.ts";
+import { Gateway } from "./gateway.ts";
 
 export class VoiceConn {
   private connected: Promise<void>;
@@ -20,7 +20,7 @@ export class VoiceConn {
   ) => void;
   status: "open" | "closed" = "open";
 
-  constructor(private client: Client, private guildId: string) {
+  constructor(private gateway: Gateway, private guildId: string) {
     this.state = {
       nonce: 0,
       guildId,
@@ -38,11 +38,11 @@ export class VoiceConn {
 
   disconnect() {
     clearInterval(this.intervalId);
-    this.client.gateway.events.removeEventListener(
+    this.gateway.events.removeEventListener(
       "DISPATCH_VOICE_STATE_UPDATE",
       this.voiceServerUpdateHandler!
     );
-    this.client.gateway.events.removeEventListener(
+    this.gateway.events.removeEventListener(
       "DISPATCH_VOICE_SERVER_UPDATE",
       this.voiceServerUpdateHandler!
     );
@@ -53,7 +53,7 @@ export class VoiceConn {
   }
 
   private sendVoiceStateUpdate(channelId: string | null) {
-    this.client.gateway.send({
+    this.gateway.send({
       op: GatewayOpcodes.VoiceStateUpdate,
       d: {
         self_deaf: false,
@@ -70,12 +70,12 @@ export class VoiceConn {
     ) => {
       if (payload.d.guild_id !== this.state.guildId) return;
       this.state.sessionId = payload.d.session_id;
-      this.client.gateway.events.removeEventListener(
+      this.gateway.events.removeEventListener(
         "DISPATCH_VOICE_STATE_UPDATE",
         this.voiceStateUpdateHandler!
       );
     };
-    this.client.gateway.events.addEventListener(
+    this.gateway.events.addEventListener(
       "DISPATCH_VOICE_STATE_UPDATE",
       this.voiceStateUpdateHandler
     );
@@ -86,12 +86,12 @@ export class VoiceConn {
       this.state.endpoint = payload.d.endpoint || undefined;
       this.state.token = payload.d.token;
       this.state.ws = new VoiceWsConn(this.state);
-      this.client.gateway.events.removeEventListener(
+      this.gateway.events.removeEventListener(
         "DISPATCH_VOICE_SERVER_UPDATE",
         this.voiceServerUpdateHandler!
       );
     };
-    this.client.gateway.events.addEventListener(
+    this.gateway.events.addEventListener(
       "DISPATCH_VOICE_SERVER_UPDATE",
       this.voiceServerUpdateHandler
     );

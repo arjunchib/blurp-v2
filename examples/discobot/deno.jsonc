@@ -5,7 +5,7 @@
   },
   "importMap": "import_map.json",
   "tasks": {
-    "dev": "deno run -A --watch -- main.ts --dev",
+    "dev": "deno run -A --watch -- main.ts",
     "upload": "deno run -A -- main.ts --upload"
   }
 }

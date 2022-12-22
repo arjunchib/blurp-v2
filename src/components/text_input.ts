@@ -1,4 +1,4 @@
-import { DistributiveOmit } from "https://deno.land/x/discord_api_types@0.37.17/utils/internals.ts";
+import { DistributiveOmit } from "../utils.ts";
 import { APITextInputComponent, ComponentType } from "../deps.ts";
 
 type TextInputProps = DistributiveOmit<APITextInputComponent, "type">;

@@ -1,11 +1,11 @@
-import { Interaction } from "./interaction.ts";
+import { Interaction } from "../runtimes/common.ts";
 import {
   APIInteraction,
   APIInteractionResponse,
   InteractionResponseType,
   InteractionType,
 } from "../deps.ts";
-import { Client } from "../core/client.ts";
+import type { Rest } from "../core/rest.ts";
 
 export class WebhookInteraction extends Interaction {
   response: Promise<APIInteractionResponse>;
@@ -13,8 +13,8 @@ export class WebhookInteraction extends Interaction {
     value: APIInteractionResponse | PromiseLike<APIInteractionResponse>
   ) => void;
 
-  constructor(payload: APIInteraction, client: Client) {
-    super(payload, client);
+  constructor(payload: APIInteraction, rest: Rest) {
+    super(payload, rest);
     this.response = new Promise((resolve, _reject) => {
       this.resolve = resolve;
     });

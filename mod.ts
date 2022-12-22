@@ -1,6 +1,5 @@
 // Base
-export { Client } from "./src/core/client.ts";
-export { start } from "./src/start.ts";
+export * from "./src/runtimes/deno.ts";
 
 // Components
 export { ChannelMessageWithSource } from "./src/components/channel_message_with_source.ts";

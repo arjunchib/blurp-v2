@@ -1,14 +1,13 @@
-import { LevelName, LogConfig } from "https://deno.land/std@0.167.0/log/mod.ts";
-import { Interaction } from "../mod.ts";
-import { RESTPostAPIApplicationCommandsJSONBody } from "./deps.ts";
+import type { Interaction } from "./interaction/interaction.ts";
+import type { RESTPostAPIApplicationCommandsJSONBody } from "./deps.ts";
+
+export interface CommandModule {
+  command: Command;
+  default: Handler;
+}
 
 export interface Options {
-  commands: {
-    command: Command;
-    default: Handler;
-  }[];
-  logs?: LogConfig | LevelName | false;
-  useWebhooks?: boolean;
+  commands: CommandModule[];
 }
 
 export type Command = RESTPostAPIApplicationCommandsJSONBody;

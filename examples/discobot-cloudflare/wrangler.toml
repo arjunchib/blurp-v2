@@ -1,0 +1,9 @@
+name = "discobot"
+compatibility_date = "2022-12-16"
+main = "src/index.ts"
+
+# Secrets
+# TOKEN
+# PUBLIC_KEY
+# APPLICATION_ID
+# GUILD_ID

@@ -1,11 +1,13 @@
-import { start } from "disco";
+import { startWebhook, updateCommands } from "disco";
 import * as ColorPicker from "./commands/color-picker.tsx";
 import * as Form from "./commands/form.tsx";
 import * as Multiply from "./commands/multiply.tsx";
 import * as Test from "./commands/test.tsx";
 
-await start({
-  commands: [ColorPicker, Form, Multiply, Test],
+const commands = [ColorPicker, Form, Multiply, Test];
+
+await updateCommands(commands);
+await startWebhook({
+  commands,
   logs: "DEBUG",
-  useWebhooks: true,
 });

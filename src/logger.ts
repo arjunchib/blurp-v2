@@ -1,22 +1,33 @@
-import { log } from "./deps.ts";
-const { getLogger } = log;
+class ConsoleLogger {
+  constructor(private id: string) {}
+
+  private wrapMsg(msg: string): string {
+    return `[${this.id}] ${msg}`;
+  }
+
+  info(msg: string) {
+    console.info(this.wrapMsg(msg));
+  }
+
+  debug(msg: string) {
+    console.debug(this.wrapMsg(msg));
+  }
+
+  warn(msg: string) {
+    console.warn(this.wrapMsg(msg));
+  }
+
+  error(msg: string) {
+    console.error(this.wrapMsg(msg));
+  }
+}
 
 class Logger {
-  get base() {
-    return getLogger("disco");
-  }
-  get voice() {
-    return getLogger("discoVoice");
-  }
-  get gateway() {
-    return getLogger("discoGateway");
-  }
-  get rest() {
-    return getLogger("discoRest");
-  }
-  get webhook() {
-    return getLogger("discoWebhook");
-  }
+  base = new ConsoleLogger("disco");
+  voice = new ConsoleLogger("discoVoice");
+  gateway = new ConsoleLogger("discoGateway");
+  rest = new ConsoleLogger("discoRest");
+  webhook = new ConsoleLogger("discoWebhook");
 }
 
 export const logger = new Logger();

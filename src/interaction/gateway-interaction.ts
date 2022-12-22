@@ -7,7 +7,7 @@ import {
 
 export class GatewayInteraction extends Interaction {
   reply(response: APIInteractionResponse) {
-    this.client.rest.createInteractionResponse(this.payload, response);
+    this.rest.createInteractionResponse(this.payload, response);
   }
 
   defer() {
@@ -15,6 +15,6 @@ export class GatewayInteraction extends Interaction {
       this.payload.type === InteractionType.MessageComponent
         ? InteractionResponseType.DeferredMessageUpdate
         : InteractionResponseType.DeferredChannelMessageWithSource;
-    this.client.rest.createInteractionResponse(this.payload, { type });
+    this.rest.createInteractionResponse(this.payload, { type });
   }
 }

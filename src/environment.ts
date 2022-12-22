@@ -1,12 +1,13 @@
-// Auto-load dotenv vars
-import "https://deno.land/std@0.167.0/dotenv/load.ts";
-
 const API_VERSION = 10;
 
-export const environment = {
+interface Environment {
+  version: number;
+  token?: string;
+  applicationId?: string;
+  guildId?: string;
+  publicKey?: string;
+}
+
+export const environment: Environment = {
   version: API_VERSION,
-  token: Deno.env.get("TOKEN"),
-  applicationId: Deno.env.get("APPLICATION_ID"),
-  guildId: Deno.env.get("GUILD_ID"),
-  publicKey: Deno.env.get("PUBLIC_KEY"),
 };

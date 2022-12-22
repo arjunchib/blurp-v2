@@ -1,4 +1,4 @@
-import { DistributiveOmit } from "https://deno.land/x/discord_api_types@0.37.17/utils/internals.ts";
+import { DistributiveOmit } from "../utils.ts";
 import { APIButtonComponent, ComponentType } from "../deps.ts";
 import { replaceChildren, ReplaceKeys } from "../utils.ts";
 

@@ -1,4 +1,3 @@
-import { Client } from "./client.ts";
 import {
   GatewayDispatchEvents,
   GatewayDispatchPayload,
@@ -11,6 +10,7 @@ import {
 import { environment } from "../environment.ts";
 import { EventNames } from "./gateway_models.ts";
 import { logger } from "../logger.ts";
+import { Gateway } from "./gateway.ts";
 
 export class GatewayWsConn {
   private ws!: WebSocket;
@@ -21,7 +21,7 @@ export class GatewayWsConn {
   private resumeGatewayUrl?: string;
   private resumed = false;
 
-  constructor(private gatewayUrl: string, private client: Client) {
+  constructor(private gatewayUrl: string, private gateway: Gateway) {
     this.sessionId = localStorage.getItem("sessionId") || undefined;
     this.resumeGatewayUrl =
       localStorage.getItem("resumeGatewayUrl") || undefined;
@@ -109,9 +109,9 @@ export class GatewayWsConn {
     let eventName = GatewayOpcodes[payload.op].toUpperCase();
     if (payload.t) {
       eventName += `_${payload.t}`;
-      this.client.gateway.events.dispatchEvent("DISPATCH", payload);
+      this.gateway.events.dispatchEvent("DISPATCH", payload);
     }
-    this.client.gateway.events.dispatchEvent(eventName as EventNames, payload);
+    this.gateway.events.dispatchEvent(eventName as EventNames, payload);
   }
 
   private setupHeartbeat(heartbeatInterval: number) {
@@ -148,7 +148,7 @@ export class GatewayWsConn {
     const payload: GatewayIdentify = {
       op: GatewayOpcodes.Identify,
       d: {
-        token: environment.token,
+        token: environment.token!,
         intents: 1 << 7,
         properties: {
           os: "macos",
@@ -201,7 +201,7 @@ export class GatewayWsConn {
       d: {
         session_id: this.sessionId!,
         seq: this.seq!,
-        token: environment.token,
+        token: environment.token!,
       },
     });
   }

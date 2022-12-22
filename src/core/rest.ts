@@ -34,7 +34,7 @@ export class Rest {
         logger.rest.debug(
           `${res.status} ${res.statusText} ${JSON.stringify(data)}`
         );
-        return data;
+        return data as T;
       } else {
         const msg = `${res.status} ${res.statusText} ${await res.text()}`;
         res.ok ? logger.rest.debug(msg) : logger.rest.error(msg);
@@ -46,7 +46,8 @@ export class Rest {
     }
   }
 
-  public async getGatewayBot() {
+  // return type annotation required for dnt node
+  public async getGatewayBot(): Promise<RESTGetAPIGatewayBotResult> {
     return await this.fetch<RESTGetAPIGatewayBotResult>("/gateway/bot");
   }
 

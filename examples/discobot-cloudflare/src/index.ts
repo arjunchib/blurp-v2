@@ -1,5 +1,5 @@
 import { Disco } from "@disco/cloudflare";
-import * as Test from "./test";
+import * as Tally from "./tally.js";
 
 // const handler = startWebhook({ commands: [Test] });
 
@@ -9,4 +9,4 @@ import * as Test from "./test";
 //   },
 // };
 
-export default new Disco([Test]);
+export default new Disco([Tally]);

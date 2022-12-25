@@ -9,7 +9,6 @@ environment.guildId = Deno.env.get("GUILD_ID");
 environment.publicKey = Deno.env.get("PUBLIC_KEY");
 
 export async function updateCommands(commands: CommandModule[]) {
-  console.log(environment);
   const rest = new Rest();
   const commandData = commands.map((c) => c.command);
   // Bail out if no localStorage (i.e. deno deploy)

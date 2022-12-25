@@ -1,5 +1,5 @@
 import { Disco } from "@disco/bun";
-import * as Test from "./commands/test.tsx";
+import * as Test from "./commands/test.jsx";
 
 const app = new Disco([Test]);
 

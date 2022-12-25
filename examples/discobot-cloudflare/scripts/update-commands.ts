@@ -1,6 +1,4 @@
 import { updateCommands } from "@disco/node";
-import * as Test from "../src/test.jsx";
+import * as Tally from "../src/tally.js";
 
-console.log();
-
-await updateCommands([Test]);
+await updateCommands([Tally]);

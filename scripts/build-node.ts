@@ -65,7 +65,7 @@ await build({
     //   version: "0.37.17",
     //   subPath: "utils/v10",
     // },
-    "./src/runtimes/common.ts": "@disco/common",
+    "./src/common.ts": "@disco/common",
   },
   package: {
     // package.json properties

@@ -42,6 +42,7 @@ jobs:
             !packages/cloudflare/node_modules
   build-node:
     name: Build Node
+    needs: build-common
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

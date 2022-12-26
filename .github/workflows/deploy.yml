@@ -22,6 +22,7 @@ jobs:
           path: |
             packages/common
             !packages/common/node_modules
+            !packages/common/pnpm-lock.yaml
   build-cloudflare:
     name: Build Cloudflare
     runs-on: ubuntu-latest
@@ -40,6 +41,7 @@ jobs:
           path: |
             packages/cloudflare
             !packages/cloudflare/node_modules
+            !packages/cloudflare/pnpm-lock.yaml
   build-node:
     name: Build Node
     runs-on: ubuntu-latest
@@ -58,6 +60,7 @@ jobs:
           path: |
             packages/node
             !packages/node/node_modules
+            !packages/node/pnpm-lock.yaml
   deploy-deno:
     name: Deploy / Deno
     runs-on: ubuntu-latest

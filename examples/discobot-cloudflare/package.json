@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "scripts": {
+    "update": "ts-node-esm -r dotenv/config scripts/update-commands.ts dotenv_config_path=.dev.vars"
+  },
   "dependencies": {
     "@disco/cloudflare": "link:../../packages/cloudflare",
     "@disco/node": "link:../../packages/node",
     "@disco/common": "link:../../packages/common",
     "discord-api-types": "^0.37.23"
-  },
-  "scripts": {
-    "update": "ts-node-esm -r dotenv/config scripts/update-commands.ts dotenv_config_path=.dev.vars"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20221111.1",

@@ -55,6 +55,9 @@ jobs:
   deploy-deno:
     name: Deploy / Deno
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: examples/discobot
     env:
       GUILD_ID: ${{ secrets.GUILD_ID }}
       APPLICATION_ID: ${{ secrets.DENO_DEPLOY_APPLICATION_ID }}

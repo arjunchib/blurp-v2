@@ -19,7 +19,9 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: common-package
-          path: packages/common
+          path: |
+            packages/common
+            !packages/common/node_modules
   build-cloudflare:
     name: Build Cloudflare
     runs-on: ubuntu-latest
@@ -35,7 +37,9 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: cloudflare-package
-          path: packages/cloudflare
+          path: |
+            packages/cloudflare
+            !packages/cloudflare/node_modules
   build-node:
     name: Build Node
     runs-on: ubuntu-latest
@@ -51,7 +55,9 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: node/package
-          path: packages/node
+          path: |
+            packages/node
+            !packages/node/node_modules
   deploy-deno:
     name: Deploy / Deno
     runs-on: ubuntu-latest

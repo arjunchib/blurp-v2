@@ -54,7 +54,7 @@ jobs:
       - run: deno run -A scripts/build-node.ts
       - uses: actions/upload-artifact@v3
         with:
-          name: node/package
+          name: node-package
           path: |
             packages/node
             !packages/node/node_modules

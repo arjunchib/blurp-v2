@@ -1,10 +1,37 @@
-name: Deploy Example Projects
+name: Build & Deploy
 on:
   push:
     branches:
       - main
 jobs:
-  deno-deploy:
+  build-common:
+    name: Build Common
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: vx.x.x
+      - run: deno run -A scripts/build-common.ts
+      - uses: actions/upload-artifact@v3
+        with:
+          name: common-package
+          path: packages/common
+  build-cloudflare:
+    name: Build Cloudflare
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: vx.x.x
+      - run: deno run -A scripts/build-cloudflare.ts
+      - uses: actions/upload-artifact@v3
+        with:
+          name: cloudflare-package
+          path: packages/cloudflare
+  deploy-deno:
+    name: Deploy / Deno
     runs-on: ubuntu-latest
     env:
       GUILD_ID: ${{ secrets.GUILD_ID }}
@@ -16,3 +43,34 @@ jobs:
         with:
           deno-version: vx.x.x
       - run: deno run -A -- examples/discobot/main.ts --upload
+  deploy-cloudflare:
+    name: Deploy / Cloudflare
+    needs: [build-common, build-cloudflare]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: examples/discobot-cloudflare
+    env:
+      GUILD_ID: ${{ secrets.GUILD_ID }}
+      APPLICATION_ID: ${{ secrets.CLOUDFLARE_APPLICATION_ID }}
+      TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          name: cloudflare-package
+          path: packages/cloudflare
+      - uses: pnpm/action-setup@v2
+        with:
+          version: latest
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: pnpm
+          cache-dependency-path: examples/discobot-cloudflare/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run update
+      - uses: cloudflare/wrangler-action@2.0.0
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          workingDirectory: examples/discobot-cloudflare

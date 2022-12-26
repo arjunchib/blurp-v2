@@ -3,20 +3,10 @@ import { CommandResolver } from "../command_resolver.ts";
 import { APIInteraction } from "../deps.ts";
 import { Rest } from "../core/rest.ts";
 import { environment } from "../environment.ts";
-import { CommandModule, WebhookInteraction } from "./common.ts";
-
-// Components
-export { ChannelMessageWithSource } from "../components/channel_message_with_source.ts";
-export { ActionRow } from "../components/action_row.ts";
-export { Button } from "../components/button.ts";
-export { UpdateMessage } from "../components/update_message.ts";
-export { Modal } from "../components/modal.ts";
-export { TextInput } from "../components/text_input.ts";
-export { SelectMenu } from "../components/select_menu.ts";
-export { SelectOption } from "../components/select_option.ts";
+import { CommandModule, WebhookInteraction } from "../common.ts";
 
 // Types
-export type { Command, Interaction } from "./common.ts";
+export type { Command, Interaction } from "../common.ts";
 
 // environment.token = Deno.env.get("TOKEN");
 // environment.applicationId = Deno.env.get("APPLICATION_ID");
@@ -55,8 +45,7 @@ export class Disco {
     };
   }
 
-  async fetch(request: Request) {
-    console.log(request.url);
+  fetch = async (request: Request) => {
     if (
       !environment.publicKey ||
       !environment.applicationId ||
@@ -66,5 +55,5 @@ export class Disco {
       throw new Error("Environment variables not set");
     }
     return await this.webhook.handle(request, this.handler);
-  }
+  };
 }

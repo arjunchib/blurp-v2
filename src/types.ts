@@ -11,4 +11,4 @@ export interface Options {
 }
 
 export type Command = RESTPostAPIApplicationCommandsJSONBody;
-export type Handler = (Interaction: Interaction) => void;
+export type Handler = (Interaction: Interaction, environment?: any) => void;

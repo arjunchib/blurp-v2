@@ -1,7 +1,7 @@
 import { Rest } from "../core/rest.ts";
 import { environment } from "../environment.ts";
 import { logger } from "../logger.ts";
-import { CommandModule } from "./common.ts";
+import { CommandModule } from "../common.ts";
 
 environment.token = Deno.env.get("TOKEN");
 environment.applicationId = Deno.env.get("APPLICATION_ID");

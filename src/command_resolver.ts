@@ -1,5 +1,5 @@
 import { APIInteraction, InteractionType } from "./deps.ts";
-import { CommandModule, Handler } from "./runtimes/common.ts";
+import { CommandModule, Handler } from "./common.ts";
 
 export class CommandResolver {
   constructor(private commands: CommandModule[]) {}

@@ -1,10 +1,11 @@
 import {
+  Command,
+  Interaction,
   ChannelMessageWithSource,
   ActionRow,
   Button,
   UpdateMessage,
-} from "@disco/cloudflare";
-import { Command, Interaction } from "@disco/common";
+} from "@disco/common";
 import { ButtonStyle, InteractionType } from "discord-api-types/v10";
 
 export const command: Command = {

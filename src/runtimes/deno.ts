@@ -9,9 +9,7 @@ import { WebhookInteraction } from "../interaction/webhook-interaction.ts";
 import { Rest } from "../core/rest.ts";
 import { Gateway } from "../core/gateway.ts";
 import { GatewayInteraction } from "../interaction/gateway-interaction.ts";
-import { sha1 } from "../utils.ts";
 import { environment } from "../environment.ts";
-import { logger } from "../logger.ts";
 
 environment.token = Deno.env.get("TOKEN");
 environment.applicationId = Deno.env.get("APPLICATION_ID");

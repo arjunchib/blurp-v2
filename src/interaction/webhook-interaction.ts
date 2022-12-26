@@ -1,4 +1,4 @@
-import { Interaction } from "../runtimes/common.ts";
+import { Interaction } from "../common.ts";
 import {
   APIInteraction,
   APIInteractionResponse,

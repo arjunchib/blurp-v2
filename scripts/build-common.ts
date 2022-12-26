@@ -7,7 +7,7 @@ await emptyDir(BUILD_DIR);
 
 await build({
   entryPoints: [
-    "./src/runtimes/common.ts",
+    "./src/common.ts",
     {
       name: "./jsx-runtime",
       path: "./jsx-runtime.ts",

@@ -9,4 +9,9 @@ import * as Tally from "./tally.js";
 //   },
 // };
 
-export default new Disco([Tally]);
+const app = new Disco([Tally]);
+
+// export default {
+//   fetch: (req: any, env: any, ctx: any) => app.fetch(req, env, ctx),
+// };
+export default app;

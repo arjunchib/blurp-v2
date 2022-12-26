@@ -10,6 +10,7 @@ import { Rest } from "../core/rest.ts";
 import { Gateway } from "../core/gateway.ts";
 import { GatewayInteraction } from "../interaction/gateway-interaction.ts";
 import { environment } from "../environment.ts";
+import { logger } from "../logger.ts";
 
 environment.token = Deno.env.get("TOKEN");
 environment.applicationId = Deno.env.get("APPLICATION_ID");
@@ -60,22 +61,11 @@ export function startGateway(options: Options) {
   );
 }
 
-// export async function updateCommands(commands: Options["commands"]) {
-//   const rest = new Rest();
-//   const commandData = commands.map((c) => c.command);
-//   const hash = await sha1(JSON.stringify(commands));
-//   const storageKey = "commandHash";
-//   // Bail out if no localStorage (i.e. deno deploy)
-//   if (!window.localStorage) {
-//     rest.bulkOverwriteGuildApplicationCommands(commandData);
-//     logger.base.info("Updated commands");
-//     return;
-//   }
-//   if (window.localStorage.getItem(storageKey) === hash) {
-//     logger.base.info("Skipped updating commands");
-//   } else {
-//     window.localStorage.setItem(storageKey, hash);
-//     rest.bulkOverwriteGuildApplicationCommands(commandData);
-//     logger.base.info("Updated commands");
-//   }
-// }
+export async function updateCommands(commands: Options["commands"]) {
+  const rest = new Rest();
+  const commandData = commands.map((c) => c.command);
+  // Bail out if no localStorage (i.e. deno deploy)
+  rest.bulkOverwriteGuildApplicationCommands(commandData);
+  logger.base.info("Updated commands");
+  return;
+}

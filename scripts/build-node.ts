@@ -17,6 +17,7 @@ await build({
   test: false,
   // typeCheck: false,
   scriptModule: false,
+  typeCheck: false,
   // declaration: false,
   packageManager: "pnpm",
   skipSourceOutput: true,

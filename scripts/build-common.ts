@@ -15,7 +15,7 @@ await build({
   ],
   outDir: BUILD_DIR,
   test: false,
-  // typeCheck: false,
+  typeCheck: false,
   scriptModule: false,
   // declaration: false,
   packageManager: "pnpm",

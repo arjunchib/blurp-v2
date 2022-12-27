@@ -1,0 +1,69 @@
+lockfileVersion: 5.4
+
+specifiers:
+  '@disco/bun': file:../../packages/bun
+  '@disco/common': file:../../packages/common
+  bun-types: ^0.3.0
+  discord-api-types: ^0.37.24
+
+dependencies:
+  '@disco/bun': file:../../packages/bun
+  '@disco/common': file:../../packages/common
+  discord-api-types: 0.37.24
+
+devDependencies:
+  bun-types: 0.3.0
+
+packages:
+
+  /bun-types/0.3.0:
+    resolution: {integrity: sha512-cn9ApQi1nppfTzrpqRCVIkkSyrRmV/RUik9c4FBY0Fet9Jnl4ANcDW/z9m/pM/glC7b9e3WChEtAmo9etHpTbQ==}
+    dev: true
+
+  /busboy/1.6.0:
+    resolution: {integrity: sha512-8SFQbg/0hQ9xy3UNTB0YEnsNBbWfhf7RtnzpL7TkBiTBRfrQ9Fxcnz7VJsleJpyp6rVLvXiuORqjlHi5q+PYuA==}
+    engines: {node: '>=10.16.0'}
+    dependencies:
+      streamsearch: 1.1.0
+    dev: false
+
+  /discord-api-types/0.37.17:
+    resolution: {integrity: sha512-5ZIw1VtkmToBy8ziketjHkZnW1FoLevyXdK/TslNFLozijug2RnB3MyBNtSGzML1c72koU3neeGkvFZ8OiU0tQ==}
+    dev: false
+
+  /discord-api-types/0.37.24:
+    resolution: {integrity: sha512-1+Fb4huJCihdbkJLcq2p7nBmtlmAryNwjefT8wwJnL8c7bc7WA87Oaa5mbLe96QvZyfwnwRCDX40H0HhcVV50g==}
+    dev: false
+
+  /streamsearch/1.1.0:
+    resolution: {integrity: sha512-Mcc5wHehp9aXz1ax6bZUyY5afg9u2rv5cqQI3mRrYkGC8rW2hM02jWuwjtL++LS5qinSyhj2QfLyNsuc+VsExg==}
+    engines: {node: '>=10.0.0'}
+    dev: false
+
+  /tweetnacl/1.0.3:
+    resolution: {integrity: sha512-6rt+RN7aOi1nGMyC4Xa5DdYiukl2UWCbcJft7YhxReBGQD7OAM8Pbxw6YMo4r2diNEA8FEmu32YOn9rhaiE5yw==}
+    dev: false
+
+  /undici/5.14.0:
+    resolution: {integrity: sha512-yJlHYw6yXPPsuOH0x2Ib1Km61vu4hLiRRQoafs+WUgX1vO64vgnxiCEN9dpIrhZyHFsai3F0AEj4P9zy19enEQ==}
+    engines: {node: '>=12.18'}
+    dependencies:
+      busboy: 1.6.0
+    dev: false
+
+  file:../../packages/bun:
+    resolution: {directory: ../../packages/bun, type: directory}
+    name: '@disco/bun'
+    dependencies:
+      discord-api-types: 0.37.17
+      tweetnacl: 1.0.3
+    dev: false
+
+  file:../../packages/common:
+    resolution: {directory: ../../packages/common, type: directory}
+    name: '@disco/common'
+    version: 0.0.0
+    dependencies:
+      discord-api-types: 0.37.17
+      undici: 5.14.0
+    dev: false

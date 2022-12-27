@@ -15,7 +15,7 @@ jobs:
       - uses: pnpm/action-setup@v2
         with:
           version: latest
-      - run: deno run -A scripts/build-common.ts
+      - run: deno run -A -- scripts/build-common.ts 0.0.0
       - uses: actions/upload-artifact@v3
         with:
           name: common-package
@@ -34,7 +34,7 @@ jobs:
       - uses: pnpm/action-setup@v2
         with:
           version: latest
-      - run: deno run -A scripts/build-cloudflare.ts
+      - run: deno run -A -- scripts/build-cloudflare.ts 0.0.0
       - uses: actions/upload-artifact@v3
         with:
           name: cloudflare-package
@@ -53,7 +53,7 @@ jobs:
       - uses: pnpm/action-setup@v2
         with:
           version: latest
-      - run: deno run -A scripts/build-node.ts
+      - run: deno run -A -- scripts/build-node.ts 0.0.0
       - uses: actions/upload-artifact@v3
         with:
           name: node-package

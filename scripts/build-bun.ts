@@ -66,7 +66,7 @@ await build({
     //   version: "0.37.17",
     //   subPath: "utils/v10",
     // },
-    "./src/runtimes/common.ts": "@disco/common",
+    "./src/common.ts": "@disco/common",
   },
   package: {
     // package.json properties
@@ -81,9 +81,9 @@ await build({
     bugs: {
       url: "https://github.com/username/repo/issues",
     },
-    dependecies: {
-      "@disco/common": "^0.0.0",
-    },
+    // dependecies: {
+    //   "@disco/common": "^0.0.0",
+    // },
   },
 });
 

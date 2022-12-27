@@ -1,2 +1,5 @@
-# packages:
-#   - "!**/examples/**"
+packages:
+  - "packages/*"
+  - "examples/discord-cloudflare/**"
+  # - "!**/examples/test/**"
+  # - "!**/examples/discord-cloudflare/**"

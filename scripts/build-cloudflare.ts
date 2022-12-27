@@ -81,9 +81,9 @@ await build({
     bugs: {
       url: "https://github.com/username/repo/issues",
     },
-    dependecies: {
-      "@disco/common": "^0.0.0",
-    },
+    // dependencies: {
+    //   "@disco/common": "^0.0.0",
+    // },
   },
 });
 

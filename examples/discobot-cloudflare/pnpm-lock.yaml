@@ -2,9 +2,9 @@ lockfileVersion: 5.4
 
 specifiers:
   '@cloudflare/workers-types': ^4.20221111.1
-  '@disco/cloudflare': ^0.0.0
-  '@disco/common': ^0.0.0
-  '@disco/node': ^0.0.0
+  '@disco/cloudflare': 0.0.0
+  '@disco/common': 0.0.0
+  '@disco/node': 0.0.0
   discord-api-types: ^0.37.23
   dotenv: ^16.0.3
   ts-node: ^10.9.1

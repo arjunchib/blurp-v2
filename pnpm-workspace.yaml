@@ -1,5 +1,5 @@
 packages:
   - "packages/*"
-  - "examples/discobot-cloudflare"
+  - "examples/cloudflare"
   # - "!**/examples/test/**"
   # - "!**/examples/discord-cloudflare/**"

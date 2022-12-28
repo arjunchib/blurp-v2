@@ -63,7 +63,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: examples/discobot
+        working-directory: examples/deno
     env:
       GUILD_ID: ${{ secrets.GUILD_ID }}
       APPLICATION_ID: ${{ secrets.DENO_DEPLOY_APPLICATION_ID }}
@@ -80,7 +80,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: examples/discobot-cloudflare
+        working-directory: examples/cloudflare
     env:
       GUILD_ID: ${{ secrets.GUILD_ID }}
       APPLICATION_ID: ${{ secrets.CLOUDFLARE_APPLICATION_ID }}
@@ -106,10 +106,10 @@ jobs:
         with:
           node-version: 18
           cache: pnpm
-          cache-dependency-path: examples/discobot-cloudflare/pnpm-lock.yaml
+          cache-dependency-path: examples/cloudflare/pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - run: pnpm run update
       - uses: cloudflare/wrangler-action@2.0.0
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
-          workingDirectory: examples/discobot-cloudflare
+          workingDirectory: examples/cloudflare

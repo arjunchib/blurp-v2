@@ -5,6 +5,7 @@ import {
   RESTPostAPIInteractionFollowupJSONBody,
   RESTPutAPIApplicationCommandsJSONBody,
   RESTPutAPIApplicationCommandsResult,
+  RESTGetAPIApplicationCommandsResult,
 } from "../deps.ts";
 import { environment } from "../environment.ts";
 import { logger } from "../logger.ts";
@@ -49,6 +50,13 @@ export class Rest {
   // return type annotation required for dnt node
   public async getGatewayBot(): Promise<RESTGetAPIGatewayBotResult> {
     return await this.fetch<RESTGetAPIGatewayBotResult>("/gateway/bot");
+  }
+
+  public async getGuildApplicationCommands() {
+    const { applicationId, guildId } = environment;
+    return await this.fetch<RESTGetAPIApplicationCommandsResult>(
+      `/applications/${applicationId}/guilds/${guildId}/commands`
+    );
   }
 
   public async bulkOverwriteGuildApplicationCommands(

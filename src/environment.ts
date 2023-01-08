@@ -8,6 +8,17 @@ interface Environment {
   publicKey?: string;
 }
 
-export const environment: Environment = {
+const target = {
   version: API_VERSION,
 };
+
+const handler = {
+  get(target: Environment, prop: keyof Environment, receiver: unknown) {
+    if (!target[prop]) {
+      throw new Error(`${prop} not set`);
+    }
+    return Reflect.get(target, prop, receiver);
+  },
+};
+
+export const environment: Environment = new Proxy(target, handler);

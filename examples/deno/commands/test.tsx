@@ -10,7 +10,7 @@ import { ButtonStyle, InteractionType } from "discord_api_types";
 
 export const command: Command = {
   name: "test",
-  description: "A command to do some testing :)",
+  description: "A command to do some testing :0",
 };
 
 export function sleep(ms: number): Promise<void> {

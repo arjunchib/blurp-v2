@@ -1,10 +1,13 @@
 // Auto-load dotenv vars
 import "https://deno.land/std@0.167.0/dotenv/load.ts";
-import { serve as httpServe } from "https://deno.land/std@0.167.0/http/server.ts";
 import { Webhook } from "../core/webhook.ts";
 import { CommandResolver } from "../command_resolver.ts";
-import { Options } from "../types.ts";
-import { APIInteraction, GatewayInteractionCreateDispatch } from "../deps.ts";
+import { CommandModule, Options } from "../types.ts";
+import {
+  APIInteraction,
+  GatewayInteractionCreateDispatch,
+  APIApplicationCommand,
+} from "../deps.ts";
 import { WebhookInteraction } from "../interaction/webhook-interaction.ts";
 import { Rest } from "../core/rest.ts";
 import { Gateway } from "../core/gateway.ts";
@@ -17,26 +20,64 @@ environment.applicationId = Deno.env.get("APPLICATION_ID");
 environment.guildId = Deno.env.get("GUILD_ID");
 environment.publicKey = Deno.env.get("PUBLIC_KEY");
 
-export async function startWebhook(options: Options) {
-  if (!environment.publicKey) {
-    throw new Error("Environment variables not set");
-  }
-  const serve = Deno.serve || httpServe;
-  const webhook = new Webhook();
-  const resolver = new CommandResolver(options.commands);
-  const rest = new Rest();
-  const handler = async (apiInteraction: APIInteraction) => {
-    const interaction = new WebhookInteraction(apiInteraction, rest);
-    const command = resolver.resolve(apiInteraction);
-    command?.(interaction);
-    return await interaction.response;
+function compareCommands(
+  localCommand: CommandModule["command"],
+  remoteCommand: APIApplicationCommand
+) {
+  // checks if a is a subset of b
+  const subset = (a: any, b: any) => {
+    for (const k in a) {
+      if (typeof a[k] === "object" && typeof b[k] === "object") {
+        if (!subset(a[k], b[k])) return false;
+      } else if (a[k] !== b[k]) {
+        return false;
+      }
+    }
+    return true;
   };
-  await serve(
-    async (req) => {
-      return await webhook.handle(req, handler);
-    },
-    { port: 9000 }
-  );
+  return subset(localCommand, remoteCommand);
+}
+
+export class Disco {
+  private webhook = new Webhook();
+  private rest = new Rest();
+  private resolver: CommandResolver;
+  private handler: Parameters<Webhook["handle"]>[1];
+
+  constructor(commands: CommandModule[]) {
+    this.resolver = new CommandResolver(commands);
+    this.handler = async (apiInteraction: APIInteraction) => {
+      const interaction = new WebhookInteraction(apiInteraction, this.rest);
+      const command = this.resolver.resolve(apiInteraction);
+      command?.(interaction);
+      return await interaction.response;
+    };
+    this.rest.getGuildApplicationCommands().then((data) => {
+      const commandData = commands.map((c) => c.command);
+      const commandsMatch = commandData.every((localCommand) => {
+        const remoteCommand = data.find((c) => c.name === localCommand.name);
+        if (!remoteCommand) return false;
+        return compareCommands(localCommand, remoteCommand);
+      });
+      if (!commandsMatch) {
+        this.rest
+          .bulkOverwriteGuildApplicationCommands(commandData)
+          .then((_) => console.log("Updated commands"));
+      }
+    });
+  }
+
+  fetch = async (request: Request) => {
+    if (
+      !environment.publicKey ||
+      !environment.applicationId ||
+      !environment.guildId ||
+      !environment.token
+    ) {
+      throw new Error("Environment variables not set");
+    }
+    return await this.webhook.handle(request, this.handler);
+  };
 }
 
 export function startGateway(options: Options) {
@@ -64,7 +105,6 @@ export function startGateway(options: Options) {
 export async function updateCommands(commands: Options["commands"]) {
   const rest = new Rest();
   const commandData = commands.map((c) => c.command);
-  // Bail out if no localStorage (i.e. deno deploy)
   rest.bulkOverwriteGuildApplicationCommands(commandData);
   logger.base.info("Updated commands");
   return;

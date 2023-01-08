@@ -5,14 +5,6 @@ import { Rest } from "../core/rest.ts";
 import { environment } from "../environment.ts";
 import { CommandModule, WebhookInteraction } from "../common.ts";
 
-// Types
-export type { Command, Interaction } from "../common.ts";
-
-// environment.token = Deno.env.get("TOKEN");
-// environment.applicationId = Deno.env.get("APPLICATION_ID");
-// environment.guildId = Deno.env.get("GUILD_ID");
-// environment.publicKey = Deno.env.get("PUBLIC_KEY");
-
 declare global {
   const Bun: {
     env: {
@@ -46,14 +38,6 @@ export class Disco {
   }
 
   fetch = async (request: Request) => {
-    if (
-      !environment.publicKey ||
-      !environment.applicationId ||
-      !environment.guildId ||
-      !environment.token
-    ) {
-      throw new Error("Environment variables not set");
-    }
     return await this.webhook.handle(request, this.handler);
   };
 }

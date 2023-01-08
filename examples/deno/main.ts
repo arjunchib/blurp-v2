@@ -1,11 +1,7 @@
-import { startWebhook } from "disco";
-import * as ColorPicker from "./commands/color-picker.tsx";
-import * as Form from "./commands/form.tsx";
-import * as Multiply from "./commands/multiply.tsx";
-import * as Test from "./commands/test.tsx";
+import { serve } from "https://deno.land/std@0.167.0/http/server.ts";
+import { Disco } from "disco";
+import commands from "./commands/mod.ts";
 
-const commands = [ColorPicker, Form, Multiply, Test];
+const app = new Disco(commands);
 
-await startWebhook({
-  commands,
-});
+await serve(app.fetch, { port: 8787 });

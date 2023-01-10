@@ -1,0 +1,19 @@
+lockfileVersion: 5.4
+
+specifiers:
+  discord-api-types: ^0.37.27
+  tweetnacl: ^1.0.3
+
+dependencies:
+  discord-api-types: 0.37.27
+  tweetnacl: 1.0.3
+
+packages:
+
+  /discord-api-types/0.37.27:
+    resolution: {integrity: sha512-rfB4zT9gkKgIfLOgXQZPUXaaKY9gwQhyhiir5TU/GN+38E39NNasRPYOcAeM4JPGAuDrHDvPtYiZGa0GfT60ww==}
+    dev: false
+
+  /tweetnacl/1.0.3:
+    resolution: {integrity: sha512-6rt+RN7aOi1nGMyC4Xa5DdYiukl2UWCbcJft7YhxReBGQD7OAM8Pbxw6YMo4r2diNEA8FEmu32YOn9rhaiE5yw==}
+    dev: false

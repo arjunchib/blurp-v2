@@ -1,0 +1,15 @@
+lockfileVersion: 5.4
+
+specifiers:
+  '@blurp/common': workspace:^0.1.0
+  discord-api-types: ^0.37.27
+
+dependencies:
+  '@blurp/common': link:../common
+  discord-api-types: 0.37.27
+
+packages:
+
+  /discord-api-types/0.37.27:
+    resolution: {integrity: sha512-rfB4zT9gkKgIfLOgXQZPUXaaKY9gwQhyhiir5TU/GN+38E39NNasRPYOcAeM4JPGAuDrHDvPtYiZGa0GfT60ww==}
+    dev: false

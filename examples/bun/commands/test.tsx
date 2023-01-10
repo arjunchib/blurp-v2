@@ -3,8 +3,9 @@ import {
   ActionRow,
   Button,
   UpdateMessage,
-} from "@disco/bun";
-import { Command, Interaction } from "@disco/common";
+  Command,
+  Interaction,
+} from "@blurp/common";
 import { ButtonStyle, InteractionType } from "discord-api-types/v10";
 
 export const command: Command = {

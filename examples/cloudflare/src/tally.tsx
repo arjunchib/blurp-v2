@@ -5,7 +5,7 @@ import {
   ActionRow,
   Button,
   UpdateMessage,
-} from "@disco/common";
+} from "@blurp/common";
 import { ButtonStyle, InteractionType } from "discord-api-types/v10";
 
 export const command: Command = {

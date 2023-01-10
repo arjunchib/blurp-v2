@@ -1,0 +1,24 @@
+{
+  "name": "@blurp/node",
+  "version": "0.1.0",
+  "description": "",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./lib/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^18.11.18",
+    "discord-api-types": "^0.37.27"
+  },
+  "dependencies": {
+    "@blurp/common": "workspace:^0.1.0"
+  }
+}

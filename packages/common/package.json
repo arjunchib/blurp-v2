@@ -1,0 +1,31 @@
+{
+  "name": "@blurp/common",
+  "version": "0.1.0",
+  "description": "",
+  "module": "./lib/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "discord-api-types": "^0.37.27",
+    "tweetnacl": "^1.0.3"
+  },
+  "exports": {
+    ".": {
+      "import": "./lib/index.js"
+    },
+    "./jsx-runtime": {
+      "import": "./lib/jsx-runtime.js"
+    },
+    "./jsx-dev-runtime": {
+      "import": "./lib/jsx-dev-runtime.js"
+    },
+    "./core": {
+      "import": "./lib/core.js"
+    }
+  }
+}

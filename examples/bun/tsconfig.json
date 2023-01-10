@@ -9,7 +9,7 @@
     "skipLibCheck": true,
     // Bun overrides the import source when this is not set to react-jsxdev
     "jsx": "react-jsxdev",
-    "jsxImportSource": "@disco/bun",
+    "jsxImportSource": "@blurp/common",
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "allowJs": true,

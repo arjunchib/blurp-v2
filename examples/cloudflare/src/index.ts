@@ -1,5 +1,6 @@
-import { Disco } from "@disco/cloudflare";
+import { serveWebhook } from "@blurp/cloudflare";
 import * as Tally from "./tally.js";
 
-const app = new Disco([Tally]);
-export default app;
+export default {
+  fetch: serveWebhook([Tally]),
+};

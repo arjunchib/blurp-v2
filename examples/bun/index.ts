@@ -1,11 +1,11 @@
-import { Disco } from "@disco/bun";
+import { serveWebhook, updateCommands } from "@blurp/bun";
 import * as Test from "./commands/test.js";
 
-const app = new Disco([Test]);
+const commands = [Test];
 
-// console.log(app);
+await updateCommands(commands);
 
 export default {
   port: 8787,
-  fetch: async (req: Request) => await app.fetch(req),
+  fetch: serveWebhook(commands),
 };

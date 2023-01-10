@@ -1,0 +1,24 @@
+{
+  "name": "@blurp/cloudflare",
+  "version": "0.1.0",
+  "description": "",
+  "type": "module",
+  "exports": {
+    ".": {
+      "import": "./lib/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc -p ."
+  },
+  "files": [
+    "lib/**"
+  ],
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@blurp/common": "workspace:^0.1.0",
+    "discord-api-types": "^0.37.27"
+  }
+}

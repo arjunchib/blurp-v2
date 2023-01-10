@@ -8,10 +8,10 @@
     "update": "ts-node-esm -r dotenv/config scripts/update-commands.ts dotenv_config_path=.dev.vars"
   },
   "dependencies": {
-    "@disco/cloudflare": "0.0.0",
-    "@disco/common": "0.0.0",
-    "@disco/node": "0.0.0",
-    "discord-api-types": "^0.37.23"
+    "@blurp/cloudflare": "workspace:^0.1.0",
+    "@blurp/common": "workspace:^0.1.0",
+    "@blurp/node": "workspace:^0.1.0",
+    "discord-api-types": "^0.37.27"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20221111.1",

@@ -1,17 +1,16 @@
-name = "discobot"
-compatibility_date = "2022-12-16"
-main = "src/index.ts"
-
-[build]
-# Update commands
-command = "pnpm run update"
-
-kv_namespaces = [
-  { binding = "TALLY_KV", id = "62c0c9a3372f42b5894894c001e7781f", preview_id = "e9e86f95529d4041b1f1e02cc72f4186" }
-]
-
-# Secrets
+# Secrets:
 # TOKEN
 # PUBLIC_KEY
 # APPLICATION_ID
 # GUILD_ID
+
+name = "discobot"
+compatibility_date = "2022-12-16"
+main = "src/index.ts"
+kv_namespaces = [
+  { binding = "TALLY_KV", id = "62c0c9a3372f42b5894894c001e7781f", preview_id = "e9e86f95529d4041b1f1e02cc72f4186" }
+]
+
+[build]
+# Update commands on build
+command = "pnpm run update"

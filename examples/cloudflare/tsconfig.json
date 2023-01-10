@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "jsx": "react-jsx",
-    "jsxImportSource": "@disco/cloudflare",
+    "jsxImportSource": "@blurp/common",
     "lib": ["ES2021"],
     "target": "ES2021",
     "module": "es2022",

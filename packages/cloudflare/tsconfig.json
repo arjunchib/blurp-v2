@@ -1,8 +1,11 @@
 {
+  "include": ["src/**/*"],
+  "references": [{ "path": "../common" }],
   "compilerOptions": {
+    "composite": true,
+    "rootDir": "src",
     "target": "es2022",
     "outDir": "lib",
-    "declaration": true,
     "moduleResolution": "Node16"
   }
 }

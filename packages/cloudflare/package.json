@@ -9,7 +9,7 @@
     }
   },
   "scripts": {
-    "build": "tsc -p ."
+    "build": "tsc -b"
   },
   "files": [
     "lib/**"

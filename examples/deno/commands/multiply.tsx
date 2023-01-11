@@ -3,7 +3,7 @@ import {
   ApplicationCommandType,
   InteractionType,
 } from "discord_api_types";
-import { Command, Interaction, ChannelMessageWithSource } from "disco";
+import { Command, Interaction, ChannelMessageWithSource } from "blurp";
 
 export const command: Command = {
   name: "multiply",

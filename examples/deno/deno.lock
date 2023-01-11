@@ -116,5 +116,28 @@
     "https://deno.land/x/discord_api_types@0.37.17/utils/v10.ts": "c731ae3a76e7bc62543f24e945420b1c1ff5870167e7990ffc134323cbfd73f2",
     "https://deno.land/x/discord_api_types@0.37.17/v10.ts": "f3f23492c59e77859aba5b34431edf3668c37f722d7f70c2e1ef7ba4bcda3010",
     "https://deno.land/x/discord_api_types@0.37.17/voice/v4.ts": "cdf7ad9fc71e8881d6c36e4418c23d3804c2e622ba067b97bc3e95a4d65770e4"
+  },
+  "npm": {
+    "specifiers": {
+      "@blurp/common": "@blurp/common@0.1.0",
+      "discord-api-types": "discord-api-types@0.37.27"
+    },
+    "packages": {
+      "@blurp/common@0.1.0": {
+        "integrity": "sha512-GJdbDIJk4uLcAQO52mIed92/Hmo7Jpc9R5RSxzDM2zUAk3KEKDKxMw0ABJgmZCA+DcywY2EbM9f7m6xfVHpw/w==",
+        "dependencies": {
+          "discord-api-types": "discord-api-types@0.37.27",
+          "tweetnacl": "tweetnacl@1.0.3"
+        }
+      },
+      "discord-api-types@0.37.27": {
+        "integrity": "sha512-rfB4zT9gkKgIfLOgXQZPUXaaKY9gwQhyhiir5TU/GN+38E39NNasRPYOcAeM4JPGAuDrHDvPtYiZGa0GfT60ww==",
+        "dependencies": {}
+      },
+      "tweetnacl@1.0.3": {
+        "integrity": "sha512-6rt+RN7aOi1nGMyC4Xa5DdYiukl2UWCbcJft7YhxReBGQD7OAM8Pbxw6YMo4r2diNEA8FEmu32YOn9rhaiE5yw==",
+        "dependencies": {}
+      }
+    }
   }
 }

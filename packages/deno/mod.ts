@@ -15,8 +15,10 @@ import {
   Gateway,
   GatewayInteraction,
   environment,
-  logger,
+  // logger,
 } from "npm:@blurp/common/core";
+
+export * from "npm:@blurp/common";
 
 environment.token = Deno.env.get("TOKEN");
 environment.applicationId = Deno.env.get("APPLICATION_ID");
@@ -109,6 +111,6 @@ export async function updateCommands(commands: Options["commands"]) {
   const rest = new Rest();
   const commandData = commands.map((c) => c.command);
   rest.bulkOverwriteGuildApplicationCommands(commandData);
-  logger.base.info("Updated commands");
+  // logger.base.info("Updated commands");
   return;
 }

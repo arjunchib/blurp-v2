@@ -6,7 +6,7 @@ import {
   SelectMenu,
   SelectOption,
   UpdateMessage,
-} from "disco";
+} from "blurp";
 import { InteractionType, ComponentType } from "discord_api_types";
 
 export const command: Command = {

@@ -1,8 +1,8 @@
 {
   "imports": {
-    "disco": "../../mod.ts",
-    "disco/jsx-runtime": "../../jsx-runtime.ts",
-    "disco/jsx-dev-runtime": "../../jsx-dev-runtime.ts",
+    "blurp": "../../packages/deno/mod.ts",
+    "blurp/jsx-runtime": "../../packages/deno/jsx-runtime.ts",
+    "blurp/jsx-dev-runtime": "../../packages/deno/jsx-dev-runtime.ts",
     "discord_api_types": "https://deno.land/x/discord_api_types@0.37.17/v10.ts"
   }
 }

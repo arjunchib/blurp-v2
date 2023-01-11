@@ -1,7 +1,12 @@
 import { InteractionType, TextInputStyle } from "discord_api_types";
-import { Command, Interaction, Modal, TextInput } from "disco";
-import { ActionRow } from "../../../src/components/action_row.ts";
-import { ChannelMessageWithSource } from "../../../src/components/channel_message_with_source.ts";
+import {
+  Command,
+  Interaction,
+  Modal,
+  TextInput,
+  ActionRow,
+  ChannelMessageWithSource,
+} from "blurp";
 
 export const command: Command = {
   name: "form",

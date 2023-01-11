@@ -17,5 +17,8 @@
   "dependencies": {
     "@blurp/common": "workspace:^0.1.0",
     "discord-api-types": "^0.37.27"
+  },
+  "devDependencies": {
+    "bun-types": "^0.3.0"
   }
 }

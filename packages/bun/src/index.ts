@@ -1,4 +1,10 @@
-import { APIApplicationCommand, APIInteraction } from "discord-api-types/v10";
+// Polyfills localStorage with local sqilte db
+import "./localStorage.js";
+import {
+  APIApplicationCommand,
+  APIInteraction,
+  GatewayInteractionCreateDispatch,
+} from "discord-api-types/v10";
 import {
   Webhook,
   CommandResolver,
@@ -6,15 +12,9 @@ import {
   environment,
   CommandModule,
   WebhookInteraction,
+  Gateway,
+  GatewayInteraction,
 } from "@blurp/common/core";
-
-declare global {
-  const Bun: {
-    env: {
-      [name: string]: string;
-    };
-  };
-}
 
 environment.token = Bun.env.TOKEN;
 environment.applicationId = Bun.env.APPLICATION_ID;
@@ -38,6 +38,23 @@ export const serveWebhook = (commands: CommandModule[]) => {
     return await webhook.handle(request, handler);
   };
 };
+
+// https://github.com/oven-sh/bun/issues/1592
+export function connectGateway(commands: CommandModule[]) {
+  const rest = new Rest();
+  const gateway = new Gateway(rest);
+  const resolver = new CommandResolver(commands);
+  gateway.events.addEventListener(
+    "DISPATCH_INTERACTION_CREATE",
+    (payload: GatewayInteractionCreateDispatch) => {
+      const apiInteraction = payload.d;
+      const interaction = new GatewayInteraction(apiInteraction, rest);
+      const command = resolver.resolve(apiInteraction);
+      command?.(interaction);
+    }
+  );
+  gateway.connect();
+}
 
 function compareCommands(
   localCommand: CommandModule["command"],

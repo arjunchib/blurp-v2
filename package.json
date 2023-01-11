@@ -1,13 +1,15 @@
 {
   "name": "blurp",
   "version": "0.1.0",
-  "description": "",
+  "description": "Discord API framework for Cloudflare Workers, Bun, Node, and Deno",
+  "license": "MIT License",
   "devDependencies": {
     "typescript": "^4.9.4"
   },
   "scripts": {
     "build": "tsc -b packages/bun packages/cloudflare packages/node packages/common",
     "dev": "tsc -b -w packages/bun packages/cloudflare packages/node packages/common",
-    "clean": "tsc -b --clean packages/bun packages/cloudflare packages/node packages/common"
+    "clean": "tsc -b --clean packages/bun packages/cloudflare packages/node packages/common",
+    "publish": "pnpm -r --filter='@blurp/*' publish --dry-run --no-git-check"
   }
 }

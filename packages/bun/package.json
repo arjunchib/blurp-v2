@@ -1,7 +1,21 @@
 {
   "name": "@blurp/bun",
   "version": "0.1.0",
-  "description": "",
+  "description": "Bun runtime for Blurp",
+  "license": "MIT License",
+  "author": {
+    "name": "Arjun Chib",
+    "email": "arjunpatrickchib@gmail.com",
+    "url": "https://arjunchib.xyz"
+  },
+  "keywords": [
+    "discord",
+    "bun",
+    "blurp"
+  ],
+  "files": [
+    "lib/**"
+  ],
   "type": "module",
   "exports": {
     ".": {
@@ -11,9 +25,6 @@
   "scripts": {
     "build": "tsc -b"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@blurp/common": "workspace:^0.1.0",
     "discord-api-types": "^0.37.27"

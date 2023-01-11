@@ -1,7 +1,21 @@
 {
   "name": "@blurp/node",
   "version": "0.1.0",
-  "description": "",
+  "description": "Node runtime for Blurp",
+  "license": "MIT License",
+  "author": {
+    "name": "Arjun Chib",
+    "email": "arjunpatrickchib@gmail.com",
+    "url": "https://arjunchib.xyz"
+  },
+  "keywords": [
+    "discord",
+    "node",
+    "blurp"
+  ],
+  "files": [
+    "lib/**"
+  ],
   "type": "module",
   "exports": {
     ".": {
@@ -11,9 +25,6 @@
   "scripts": {
     "build": "tsc -b"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "@types/node": "^18.11.18",
     "discord-api-types": "^0.37.27"

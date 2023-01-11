@@ -1,15 +1,32 @@
 {
   "name": "@blurp/common",
   "version": "0.1.0",
-  "description": "",
-  "module": "./lib/index.js",
+  "description": "Discord API framework for Cloudflare Workers, Bun, Node, and Deno",
+  "author": {
+    "name": "Arjun Chib",
+    "email": "arjunpatrickchib@gmail.com",
+    "url": "https://arjunchib.xyz"
+  },
+  "keywords": [
+    "discord",
+    "cloudflare",
+    "bun",
+    "deno",
+    "node",
+    "blurp"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/arjunchib/disco.git",
+    "directory": "packages/common"
+  },
+  "files": [
+    "lib/**"
+  ],
   "type": "module",
   "scripts": {
     "build": "tsc -b"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "discord-api-types": "^0.37.27",
     "tweetnacl": "^1.0.3"

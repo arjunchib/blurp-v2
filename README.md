@@ -1,6 +1,6 @@
-# Disco 🪩
+# Blurp
 
-A Discord framework for Deno!
+A Discord framework for Cloudflare Workers, Bun, Node, and Deno!
 
 ## Getting started
 

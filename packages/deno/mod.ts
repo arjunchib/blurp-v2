@@ -43,47 +43,21 @@ function compareCommands(
   return subset(localCommand, remoteCommand);
 }
 
-export class Disco {
-  private webhook = new Webhook();
-  private rest = new Rest();
-  private resolver: CommandResolver;
-  private handler: Parameters<Webhook["handle"]>[1];
+export const serveWebhook = (commands: CommandModule[]) => {
+  const webhook = new Webhook();
+  const rest = new Rest();
+  const resolver = new CommandResolver(commands);
 
-  constructor(commands: CommandModule[]) {
-    this.resolver = new CommandResolver(commands);
-    this.handler = async (apiInteraction: APIInteraction) => {
-      const interaction = new WebhookInteraction(apiInteraction, this.rest);
-      const command = this.resolver.resolve(apiInteraction);
+  return async (request: Request) => {
+    const handler = async (apiInteraction: APIInteraction) => {
+      const interaction = new WebhookInteraction(apiInteraction, rest);
+      const command = resolver.resolve(apiInteraction);
       command?.(interaction);
       return await interaction.response;
     };
-    this.rest.getGuildApplicationCommands().then((data) => {
-      const commandData = commands.map((c) => c.command);
-      const commandsMatch = commandData.every((localCommand) => {
-        const remoteCommand = data.find((c) => c.name === localCommand.name);
-        if (!remoteCommand) return false;
-        return compareCommands(localCommand, remoteCommand);
-      });
-      if (!commandsMatch) {
-        this.rest
-          .bulkOverwriteGuildApplicationCommands(commandData)
-          .then((_) => console.log("Updated commands"));
-      }
-    });
-  }
-
-  fetch = async (request: Request) => {
-    if (
-      !environment.publicKey ||
-      !environment.applicationId ||
-      !environment.guildId ||
-      !environment.token
-    ) {
-      throw new Error("Environment variables not set");
-    }
-    return await this.webhook.handle(request, this.handler);
+    return await webhook.handle(request, handler);
   };
-}
+};
 
 export function startGateway(options: Options) {
   if (

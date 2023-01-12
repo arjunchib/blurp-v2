@@ -2,6 +2,9 @@
 
 A Discord framework for Cloudflare Workers, Bun, Node, and Deno!
 
+> **Note**
+> This does not work in Deno Deploy yet as it [does not support npm specifiers](https://github.com/denoland/deploy_feedback/issues/314).
+
 ## Getting started
 
 ```ts

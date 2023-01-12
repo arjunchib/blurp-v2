@@ -13,4 +13,4 @@ kv_namespaces = [
 
 [build]
 # Update commands on build
-command = "pnpm run update"
+command = "npm run update"

@@ -1,9 +1,31 @@
-name: Deploy Demos
+name: Build & Deploy
 on:
   push:
     branches:
       - main
 jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        with:
+          path: |
+            packages/**/tsconfig.tsbuilinfo
+            packages/**/lib
+          key: ${{ runner.os }}-build
+      - uses: pnpm/action-setup@v2
+        with:
+          version: latest
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run build
+
   # Disable until deno deploy works with npm specifiers
   # deploy-deno:
   #   name: Deploy / Deno
@@ -24,6 +46,7 @@ jobs:
   deploy-cloudflare:
     name: Deploy / Cloudflare
     runs-on: ubuntu-latest
+    needs: [build]
     defaults:
       run:
         working-directory: examples/cloudflare
@@ -33,6 +56,12 @@ jobs:
       TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/cache/restore@v3
+        with:
+          path: |
+            packages/**/tsconfig.tsbuilinfo
+            packages/**/lib
+          key: ${{ runner.os }}-build
       - uses: pnpm/action-setup@v2
         with:
           version: latest

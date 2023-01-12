@@ -10,6 +10,6 @@
     "build": "tsc -b packages/bun packages/cloudflare packages/node packages/common",
     "dev": "tsc -b -w packages/bun packages/cloudflare packages/node packages/common",
     "clean": "tsc -b --clean packages/bun packages/cloudflare packages/node packages/common",
-    "publish": "pnpm -r --filter='@blurp/*' publish --dry-run --no-git-check"
+    "publish": "pnpm -r --filter='@blurp/*' publish"
   }
 }

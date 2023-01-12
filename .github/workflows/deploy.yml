@@ -1,82 +1,28 @@
-name: Build & Deploy
+name: Deploy Demos
 on:
   push:
     branches:
       - main
 jobs:
-  build-common:
-    name: Build Common
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: denoland/setup-deno@v1
-        with:
-          deno-version: vx.x.x
-      - uses: pnpm/action-setup@v2
-        with:
-          version: latest
-      - run: deno run -A -- scripts/build-common.ts 0.0.0
-      - uses: actions/upload-artifact@v3
-        with:
-          name: common-package
-          path: |
-            packages/common
-            !packages/common/node_modules
-  build-cloudflare:
-    name: Build Cloudflare
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: denoland/setup-deno@v1
-        with:
-          deno-version: vx.x.x
-      - uses: pnpm/action-setup@v2
-        with:
-          version: latest
-      - run: deno run -A -- scripts/build-cloudflare.ts 0.0.0
-      - uses: actions/upload-artifact@v3
-        with:
-          name: cloudflare-package
-          path: |
-            packages/cloudflare
-            !packages/cloudflare/node_modules
-  build-node:
-    name: Build Node
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: denoland/setup-deno@v1
-        with:
-          deno-version: vx.x.x
-      - uses: pnpm/action-setup@v2
-        with:
-          version: latest
-      - run: deno run -A -- scripts/build-node.ts 0.0.0
-      - uses: actions/upload-artifact@v3
-        with:
-          name: node-package
-          path: |
-            packages/node
-            !packages/node/node_modules
-  deploy-deno:
-    name: Deploy / Deno
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: examples/deno
-    env:
-      GUILD_ID: ${{ secrets.GUILD_ID }}
-      APPLICATION_ID: ${{ secrets.DENO_DEPLOY_APPLICATION_ID }}
-      TOKEN: ${{ secrets.DENO_DEPLOY_TOKEN }}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: denoland/setup-deno@v1
-        with:
-          deno-version: vx.x.x
-      - run: deno run -A upload.ts
+  # Disable until deno deploy works with npm specifiers
+  # deploy-deno:
+  #   name: Deploy / Deno
+  #   runs-on: ubuntu-latest
+  #   defaults:
+  #     run:
+  #       working-directory: examples/deno
+  #   env:
+  #     GUILD_ID: ${{ secrets.GUILD_ID }}
+  #     APPLICATION_ID: ${{ secrets.DENO_DEPLOY_APPLICATION_ID }}
+  #     TOKEN: ${{ secrets.DENO_DEPLOY_TOKEN }}
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: denoland/setup-deno@v1
+  #       with:
+  #         deno-version: vx.x.x
+  #     - run: deno run -A upload.ts
   deploy-cloudflare:
     name: Deploy / Cloudflare
-    needs: [build-common, build-cloudflare, build-node]
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -87,18 +33,6 @@ jobs:
       TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/download-artifact@v3
-        with:
-          name: cloudflare-package
-          path: packages/cloudflare
-      - uses: actions/download-artifact@v3
-        with:
-          name: common-package
-          path: packages/common
-      - uses: actions/download-artifact@v3
-        with:
-          name: node-package
-          path: packages/node
       - uses: pnpm/action-setup@v2
         with:
           version: latest
@@ -106,7 +40,7 @@ jobs:
         with:
           node-version: 18
           cache: pnpm
-          cache-dependency-path: examples/cloudflare/pnpm-lock.yaml
+          cache-dependency-path: pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - run: pnpm run update
       - uses: cloudflare/wrangler-action@2.0.0

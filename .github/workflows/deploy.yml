@@ -54,6 +54,7 @@ jobs:
       GUILD_ID: ${{ secrets.GUILD_ID }}
       APPLICATION_ID: ${{ secrets.CLOUDFLARE_APPLICATION_ID }}
       TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/cache/restore@v3
@@ -72,7 +73,8 @@ jobs:
           cache-dependency-path: pnpm-lock.yaml
       - run: pnpm install --frozen-lockfile
       - run: pnpm run update
-      - uses: cloudflare/wrangler-action@2.0.0
-        with:
-          apiToken: ${{ secrets.CF_API_TOKEN }}
-          workingDirectory: examples/cloudflare
+      - run: pnpm run deploy
+      # - uses: cloudflare/wrangler-action@2.0.0
+      #   with:
+      #     apiToken: ${{ secrets.CF_API_TOKEN }}
+      #     workingDirectory: examples/cloudflare

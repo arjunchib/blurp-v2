@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "wrangler dev",
+    "deploy": "wrangler publish",
     "update": "ts-node-esm -r dotenv/config scripts/update-commands.ts dotenv_config_path=.dev.vars"
   },
   "dependencies": {

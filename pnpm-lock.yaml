@@ -58,10 +58,13 @@ importers:
   packages/cloudflare:
     specifiers:
       '@blurp/common': workspace:^0.1.0
+      '@cloudflare/workers-types': ^4.20221111.1
       discord-api-types: ^0.37.27
     dependencies:
       '@blurp/common': link:../common
       discord-api-types: 0.37.27
+    devDependencies:
+      '@cloudflare/workers-types': 4.20221111.1
 
   packages/common:
     specifiers:

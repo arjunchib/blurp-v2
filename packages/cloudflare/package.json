@@ -33,5 +33,8 @@
   "dependencies": {
     "@blurp/common": "workspace:^0.1.0",
     "discord-api-types": "^0.37.27"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20221111.1"
   }
 }

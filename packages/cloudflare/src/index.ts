@@ -16,7 +16,7 @@ export const serveWebhook = (commands: CommandModule[]) => {
   return async (
     request: Request,
     cfEnvironment: Record<string, string>,
-    context: unknown
+    context: ExecutionContext
   ) => {
     environment.applicationId = cfEnvironment.APPLICATION_ID;
     environment.guildId = cfEnvironment.GUILD_ID;
@@ -25,7 +25,7 @@ export const serveWebhook = (commands: CommandModule[]) => {
     const handler = async (apiInteraction: APIInteraction) => {
       const interaction = new WebhookInteraction(apiInteraction, rest);
       const command = resolver.resolve(apiInteraction);
-      command?.(interaction, cfEnvironment, context);
+      context.waitUntil(command?.(interaction, cfEnvironment, context));
       return await interaction.response;
     };
     return await webhook.handle(request, handler);

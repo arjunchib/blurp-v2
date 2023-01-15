@@ -25,7 +25,11 @@ export const serveWebhook = (commands: CommandModule[]) => {
     const handler = async (apiInteraction: APIInteraction) => {
       const interaction = new WebhookInteraction(apiInteraction, rest);
       const command = resolver.resolve(apiInteraction);
-      context.waitUntil(command?.(interaction, cfEnvironment, context));
+      // waitUntil ensures the worker is kept alive after the interaction responds
+      context.waitUntil(
+        // catches any errors and rejects on the response promise or re-throws
+        interaction.runCommand(command?.(interaction, cfEnvironment, context))
+      );
       return await interaction.response;
     };
     return await webhook.handle(request, handler);

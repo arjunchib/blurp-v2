@@ -32,7 +32,7 @@ export const serveWebhook = (commands: CommandModule[]) => {
     const handler = async (apiInteraction: APIInteraction) => {
       const interaction = new WebhookInteraction(apiInteraction, rest);
       const command = resolver.resolve(apiInteraction);
-      command?.(interaction);
+      interaction.runCommand(command?.(interaction));
       return await interaction.response;
     };
     return await webhook.handle(request, handler);

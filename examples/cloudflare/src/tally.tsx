@@ -52,7 +52,7 @@ export default async function Tally(
     } else if (interaction.payload.data.custom_id === "tally:down") {
       tally -= 1;
     }
-    setTally(tally);
+    await setTally(tally);
     interaction.reply(
       <UpdateMessage content={`Current score: ${tally}`}></UpdateMessage>
     );

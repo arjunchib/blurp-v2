@@ -9,14 +9,22 @@ import type { Rest } from "../core/rest.js";
 
 export class WebhookInteraction extends Interaction {
   response: Promise<APIInteractionResponse>;
-  private resolve!: (
+  resolve: (
     value: APIInteractionResponse | PromiseLike<APIInteractionResponse>
   ) => void;
+  reject: (reason: any) => void;
+  resolved = false;
 
   constructor(payload: APIInteraction, rest: Rest) {
     super(payload, rest);
-    this.response = new Promise((resolve, _reject) => {
-      this.resolve = resolve;
+    this.response = new Promise((resolve, reject) => {
+      this.resolve = (
+        value: APIInteractionResponse | PromiseLike<APIInteractionResponse>
+      ) => {
+        this.resolved = true;
+        return resolve(value);
+      };
+      this.reject = reject;
     });
   }
 
@@ -30,5 +38,17 @@ export class WebhookInteraction extends Interaction {
         ? InteractionResponseType.DeferredMessageUpdate
         : InteractionResponseType.DeferredChannelMessageWithSource;
     this.resolve({ type });
+  }
+
+  runCommand(result: Promise<void> | void): Promise<void> | void {
+    if (result) {
+      return result.catch((e) => {
+        if (this.resolved) {
+          throw e;
+        } else {
+          this.reject(e);
+        }
+      });
+    }
   }
 }

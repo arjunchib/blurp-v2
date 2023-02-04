@@ -21,6 +21,11 @@ type Handler = (
 
 export class Webhook {
   async handle(req: Request, handler: Handler) {
+    // Allow Get for HealthCheck
+    if (req.method === "GET") {
+      return new Response();
+    }
+
     // logger.webhook.debug(`${req.method} ${res.status} ${res.statusText}`);
     // validate method
     if (req.method !== "POST") {

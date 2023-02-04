@@ -1,0 +1,23 @@
+{
+  "name": "blurp-node",
+  "version": "1.0.0",
+  "description": "Demo bot for node",
+  "type": "module",
+  "scripts": {
+    "start": "ts-node-esm -r dotenv/config src/index.ts",
+    "update": "ts-node-esm -r dotenv/config scripts/update-commands.ts"
+  },
+  "keywords": [],
+  "author": "Arjun Chib",
+  "license": "MIT License",
+  "devDependencies": {
+    "@types/node": "^18.11.18",
+    "dotenv": "^16.0.3",
+    "ts-node": "^10.9.1"
+  },
+  "dependencies": {
+    "@blurp/common": "workspace:^0.1.0",
+    "@blurp/node": "workspace:^0.1.0",
+    "discord-api-types": "^0.37.31"
+  }
+}

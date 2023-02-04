@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "@blurp/common",
+    "module": "NodeNext",
+    "target": "ES2022"
+  }
+}

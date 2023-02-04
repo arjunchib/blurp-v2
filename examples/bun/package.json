@@ -1,5 +1,5 @@
 {
-  "name": "discobot-bun",
+  "name": "blurp-bun",
   "module": "index.ts",
   "type": "module",
   "dependencies": {

@@ -9,6 +9,7 @@ import {
 import { logger } from "../logger.js";
 import { OptionalPromise } from "../utils.js";
 import { environment } from "../environment.js";
+import statusPage from "../static/index.html.js";
 
 /** Converts a hexadecimal string to Uint8Array. */
 function hexToUint8Array(hex: string) {
@@ -23,7 +24,11 @@ export class Webhook {
   async handle(req: Request, handler: Handler) {
     // Allow Get for HealthCheck
     if (req.method === "GET") {
-      return new Response();
+      return new Response(statusPage, {
+        headers: {
+          "Content-Type": "text/html; charset=utf-8",
+        },
+      });
     }
 
     // logger.webhook.debug(`${req.method} ${res.status} ${res.statusText}`);

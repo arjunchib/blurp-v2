@@ -1,7 +1,4 @@
-// Polyfills localStorage with local sqilte db
-import "./localStorage.js";
 import {
-  APIApplicationCommand,
   APIInteraction,
   GatewayInteractionCreateDispatch,
 } from "discord-api-types/v10";
@@ -15,6 +12,8 @@ import {
   Gateway,
   GatewayInteraction,
 } from "@blurp/common/core";
+
+export { updateCommands } from "@blurp/common";
 
 environment.token = Bun.env.TOKEN;
 environment.applicationId = Bun.env.APPLICATION_ID;
@@ -54,36 +53,4 @@ export function connectGateway(commands: CommandModule[]) {
     }
   );
   gateway.connect();
-}
-
-function compareCommands(
-  localCommand: CommandModule["command"],
-  remoteCommand: APIApplicationCommand
-) {
-  // checks if a is a subset of b
-  const subset = (a: any, b: any) => {
-    for (const k in a) {
-      if (typeof a[k] === "object" && typeof b[k] === "object") {
-        if (!subset(a[k], b[k])) return false;
-      } else if (a[k] !== b[k]) {
-        return false;
-      }
-    }
-    return true;
-  };
-  return subset(localCommand, remoteCommand);
-}
-
-export async function updateCommands(commands: CommandModule[]) {
-  const data = await rest.getGuildApplicationCommands();
-  const commandData = commands.map((c) => c.command);
-  const commandsMatch = commandData.every((localCommand) => {
-    const remoteCommand = data.find((c) => c.name === localCommand.name);
-    if (!remoteCommand) return false;
-    return compareCommands(localCommand, remoteCommand);
-  });
-  if (!commandsMatch) {
-    await rest.bulkOverwriteGuildApplicationCommands(commandData);
-    console.log("Updated commands");
-  }
 }

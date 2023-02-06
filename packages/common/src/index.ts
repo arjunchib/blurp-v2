@@ -1,8 +1,6 @@
-// Types
 export { Command } from "./types.js";
-
-// Interaction
 export { Interaction } from "./interaction/interaction.js";
+export { updateCommands } from "./update_commands.js";
 
 // Components
 export { ChannelMessageWithSource } from "./components/channel_message_with_source.js";

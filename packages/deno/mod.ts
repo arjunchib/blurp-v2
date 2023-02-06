@@ -3,7 +3,6 @@ import "https://deno.land/std@0.167.0/dotenv/load.ts";
 import {
   APIInteraction,
   GatewayInteractionCreateDispatch,
-  APIApplicationCommand,
 } from "npm:discord-api-types";
 import {
   Webhook,
@@ -24,24 +23,6 @@ environment.token = Deno.env.get("TOKEN");
 environment.applicationId = Deno.env.get("APPLICATION_ID");
 environment.guildId = Deno.env.get("GUILD_ID");
 environment.publicKey = Deno.env.get("PUBLIC_KEY");
-
-function compareCommands(
-  localCommand: CommandModule["command"],
-  remoteCommand: APIApplicationCommand
-) {
-  // checks if a is a subset of b
-  const subset = (a: any, b: any) => {
-    for (const k in a) {
-      if (typeof a[k] === "object" && typeof b[k] === "object") {
-        if (!subset(a[k], b[k])) return false;
-      } else if (a[k] !== b[k]) {
-        return false;
-      }
-    }
-    return true;
-  };
-  return subset(localCommand, remoteCommand);
-}
 
 export const serveWebhook = (commands: CommandModule[]) => {
   const webhook = new Webhook();
@@ -79,12 +60,4 @@ export function startGateway(options: Options) {
       command?.(interaction);
     }
   );
-}
-
-export async function updateCommands(commands: Options["commands"]) {
-  const rest = new Rest();
-  const commandData = commands.map((c) => c.command);
-  rest.bulkOverwriteGuildApplicationCommands(commandData);
-  // logger.base.info("Updated commands");
-  return;
 }

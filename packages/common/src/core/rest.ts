@@ -59,12 +59,32 @@ export class Rest {
     );
   }
 
+  public async getGlobalApplicationCommands() {
+    const { applicationId } = environment;
+    return await this.fetch<RESTGetAPIApplicationCommandsResult>(
+      `/applications/${applicationId}/commands`
+    );
+  }
+
   public async bulkOverwriteGuildApplicationCommands(
     commands: RESTPutAPIApplicationCommandsJSONBody
   ) {
     const { applicationId, guildId } = environment;
     return await this.fetch<RESTPutAPIApplicationCommandsResult>(
       `/applications/${applicationId}/guilds/${guildId}/commands`,
+      {
+        body: JSON.stringify(commands),
+        method: "PUT",
+      }
+    );
+  }
+
+  public async bulkOverwriteGlobalApplicationCommands(
+    commands: RESTPutAPIApplicationCommandsJSONBody
+  ) {
+    const { applicationId } = environment;
+    return await this.fetch<RESTPutAPIApplicationCommandsResult>(
+      `/applications/${applicationId}/commands`,
       {
         body: JSON.stringify(commands),
         method: "PUT",

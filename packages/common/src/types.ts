@@ -6,10 +6,6 @@ export interface CommandModule {
   default: Handler;
 }
 
-export interface Options {
-  commands: CommandModule[];
-}
-
 export type Command = RESTPostAPIApplicationCommandsJSONBody;
 export type Handler = (
   Interaction: Interaction,

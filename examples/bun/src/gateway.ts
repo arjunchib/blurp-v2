@@ -1,7 +1,7 @@
 import { connectGateway, updateCommands } from "@blurp/bun";
-import * as Test from "./commands/test.js";
+import * as Tally from "./tally.js";
 
-const commands = [Test];
+const commands = [Tally];
 
 await updateCommands(commands);
 

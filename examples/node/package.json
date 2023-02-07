@@ -16,8 +16,8 @@
     "ts-node": "^10.9.1"
   },
   "dependencies": {
-    "@blurp/common": "workspace:^0.1.0",
-    "@blurp/node": "workspace:^0.1.0",
+    "@blurp/common": "workspace:^0.2.0",
+    "@blurp/node": "workspace:^0.2.0",
     "discord-api-types": "^0.37.31"
   }
 }

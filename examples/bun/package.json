@@ -3,8 +3,8 @@
   "module": "index.ts",
   "type": "module",
   "dependencies": {
-    "@blurp/bun": "workspace:^0.1.0",
-    "@blurp/common": "workspace:^0.1.0",
+    "@blurp/bun": "workspace:^0.2.0",
+    "@blurp/common": "workspace:^0.2.0",
     "discord-api-types": "^0.37.24"
   },
   "devDependencies": {

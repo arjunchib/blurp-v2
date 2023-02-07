@@ -1,6 +1,6 @@
 {
   "name": "@blurp/node",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Node runtime for Blurp",
   "license": "MIT License",
   "author": {
@@ -35,6 +35,6 @@
     "discord-api-types": "^0.37.27"
   },
   "dependencies": {
-    "@blurp/common": "workspace:^0.1.0"
+    "@blurp/common": "workspace:^0.2.0"
   }
 }

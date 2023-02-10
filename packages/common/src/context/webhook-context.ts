@@ -1,4 +1,4 @@
-import { Interaction } from "./interaction.js";
+import { Interaction } from "./context.js";
 import {
   APIInteraction,
   APIInteractionResponse,

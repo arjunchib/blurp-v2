@@ -1,4 +1,4 @@
-import type { Interaction } from "./interaction/interaction.js";
+import type { Interaction } from "./context/context.js";
 import type { RESTPostAPIApplicationCommandsJSONBody } from "discord-api-types/v10";
 
 export interface CommandModule {

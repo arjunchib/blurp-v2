@@ -1,5 +1,5 @@
 export { Command } from "./types.js";
-export { Interaction } from "./interaction/interaction.js";
+export { Interaction } from "./context/context.js";
 export { updateCommands } from "./update_commands.js";
 
 // Components

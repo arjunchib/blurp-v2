@@ -1,4 +1,4 @@
-import type { Interaction } from "./context/context.js";
+import type { Context } from "./context/context.js";
 import type { RESTPostAPIApplicationCommandsJSONBody } from "discord-api-types/v10";
 
 export interface CommandModule {
@@ -8,6 +8,6 @@ export interface CommandModule {
 
 export type Command = RESTPostAPIApplicationCommandsJSONBody;
 export type Handler = (
-  Interaction: Interaction,
+  Context: Context,
   ...args: any[]
 ) => void | Promise<void>;

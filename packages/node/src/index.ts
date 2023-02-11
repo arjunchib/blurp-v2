@@ -4,7 +4,7 @@ import {
   CommandModule,
   Webhook,
   CommandResolver,
-  WebhookInteraction,
+  WebhookContext,
 } from "@blurp/common/core";
 import { APIInteraction } from "discord-api-types/v10";
 import { IncomingMessage, ServerResponse } from "node:http";
@@ -28,10 +28,10 @@ export const serveWebhook = (commands: CommandModule[]) => {
 
   const fetchCallback = async (request: Request) => {
     const handler = async (apiInteraction: APIInteraction) => {
-      const interaction = new WebhookInteraction(apiInteraction, rest);
+      const context = new WebhookContext(apiInteraction, rest);
       const command = resolver.resolve(apiInteraction);
-      interaction.runCommand(command?.(interaction));
-      return await interaction.response;
+      context.runCommand(command?.(context));
+      return await context.response;
     };
     return await webhook.handle(request, handler);
   };

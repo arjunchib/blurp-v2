@@ -1,4 +1,4 @@
-import { Interaction } from "./context.js";
+import { Context } from "./context.js";
 import {
   APIInteraction,
   APIInteractionResponse,
@@ -7,7 +7,7 @@ import {
 } from "discord-api-types/v10";
 import type { Rest } from "../core/rest.js";
 
-export class WebhookInteraction extends Interaction {
+export class WebhookContext extends Context {
   response: Promise<APIInteractionResponse>;
   resolve: (
     value: APIInteractionResponse | PromiseLike<APIInteractionResponse>
@@ -28,17 +28,17 @@ export class WebhookInteraction extends Interaction {
     });
   }
 
-  reply(response: APIInteractionResponse) {
+  reply = ((response: APIInteractionResponse) => {
     this.resolve(response);
-  }
+  }).bind(this);
 
-  defer() {
+  defer = (() => {
     const type =
-      this.payload.type === InteractionType.MessageComponent
+      this.interaction.type === InteractionType.MessageComponent
         ? InteractionResponseType.DeferredMessageUpdate
         : InteractionResponseType.DeferredChannelMessageWithSource;
     this.resolve({ type });
-  }
+  }).bind(this);
 
   runCommand(result: Promise<void> | void): Promise<void> | void {
     if (result) {

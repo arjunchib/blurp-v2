@@ -1,6 +1,6 @@
 import {
   Command,
-  Interaction,
+  Context,
   ChannelMessageWithSource,
   ActionRow,
   Button,
@@ -17,8 +17,8 @@ let store = {
   count: 0,
 };
 
-export default async function Tally(interaction: Interaction) {
-  const user = interaction.payload.member?.user || interaction.payload.user;
+export default async function Tally({ interaction, reply }: Context) {
+  const user = interaction.member?.user || interaction.user;
 
   const getTally = async (): Promise<number> => {
     return store.count;
@@ -28,11 +28,11 @@ export default async function Tally(interaction: Interaction) {
     store.count = value;
   };
 
-  const { type } = interaction.payload;
+  const { type } = interaction;
   let tally = await getTally();
 
   if (type === InteractionType.ApplicationCommand) {
-    interaction.reply(
+    reply(
       <ChannelMessageWithSource content={`Current score: ${tally}`}>
         <ActionRow>
           <Button style={ButtonStyle.Primary} custom_id="tally:down">
@@ -45,14 +45,12 @@ export default async function Tally(interaction: Interaction) {
       </ChannelMessageWithSource>
     );
   } else if (type === InteractionType.MessageComponent) {
-    if (interaction.payload.data.custom_id === "tally:up") {
+    if (interaction.data.custom_id === "tally:up") {
       tally += 1;
-    } else if (interaction.payload.data.custom_id === "tally:down") {
+    } else if (interaction.data.custom_id === "tally:down") {
       tally -= 1;
     }
     await setTally(tally);
-    interaction.reply(
-      <UpdateMessage content={`Current score: ${tally}`}></UpdateMessage>
-    );
+    reply(<UpdateMessage content={`Current score: ${tally}`}></UpdateMessage>);
   }
 }

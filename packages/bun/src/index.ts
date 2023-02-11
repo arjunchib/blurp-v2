@@ -8,9 +8,9 @@ import {
   Rest,
   environment,
   CommandModule,
-  WebhookInteraction,
+  WebhookContext,
   Gateway,
-  GatewayInteraction,
+  GatewayContext,
 } from "@blurp/common/core";
 
 export { updateCommands } from "@blurp/common";
@@ -29,7 +29,7 @@ export const serveWebhook = (commands: CommandModule[]) => {
 
   return async (request: Request) => {
     const handler = async (apiInteraction: APIInteraction) => {
-      const interaction = new WebhookInteraction(apiInteraction, rest);
+      const interaction = new WebhookContext(apiInteraction, rest);
       const command = resolver.resolve(apiInteraction);
       interaction.runCommand(command?.(interaction));
       return await interaction.response;
@@ -47,7 +47,7 @@ export function connectGateway(commands: CommandModule[]) {
     "DISPATCH_INTERACTION_CREATE",
     (payload: GatewayInteractionCreateDispatch) => {
       const apiInteraction = payload.d;
-      const interaction = new GatewayInteraction(apiInteraction, rest);
+      const interaction = new GatewayContext(apiInteraction, rest);
       const command = resolver.resolve(apiInteraction);
       command?.(interaction);
     }

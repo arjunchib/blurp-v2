@@ -9,6 +9,7 @@ import {
 } from "discord-api-types/v10";
 import { environment } from "../environment.js";
 import { logger } from "../logger.js";
+import { Immutable } from "../utils.js";
 
 export class Rest {
   private readonly baseUrl: string;
@@ -67,7 +68,9 @@ export class Rest {
   }
 
   public async bulkOverwriteGuildApplicationCommands(
-    commands: RESTPutAPIApplicationCommandsJSONBody
+    commands:
+      | RESTPutAPIApplicationCommandsJSONBody
+      | Immutable<RESTPutAPIApplicationCommandsJSONBody>
   ) {
     const { applicationId, guildId } = environment;
     return await this.fetch<RESTPutAPIApplicationCommandsResult>(
@@ -80,7 +83,9 @@ export class Rest {
   }
 
   public async bulkOverwriteGlobalApplicationCommands(
-    commands: RESTPutAPIApplicationCommandsJSONBody
+    commands:
+      | RESTPutAPIApplicationCommandsJSONBody
+      | Immutable<RESTPutAPIApplicationCommandsJSONBody>
   ) {
     const { applicationId } = environment;
     return await this.fetch<RESTPutAPIApplicationCommandsResult>(

@@ -80,3 +80,15 @@ export type ReplaceKeys<
 > = {
   [P in keyof T as Replace<P, Old, New>]: T[P];
 };
+
+export type Immutable<T> = {
+  readonly [K in keyof T]: Immutable<T[K]>;
+};
+
+export type Mutable<T> = {
+  -readonly [K in keyof T]: Immutable<T[K]>;
+};
+
+export type Prettify<T> = {
+  [K in keyof T]: T[K];
+} & {};

@@ -8,18 +8,19 @@ import {
 } from "@blurp/common";
 import { ButtonStyle, InteractionType } from "discord-api-types/v10";
 
-export const command: Command = {
+export const command = {
   name: "tally",
   description: "See current score",
-};
+} as const satisfies Command;
 
 let store = {
   count: 0,
 };
 
-export default async function Tally({ interaction, reply }: Context) {
-  const user = interaction.member?.user || interaction.user;
-
+export default async function Tally({
+  interaction,
+  reply,
+}: Context<typeof command>) {
   const getTally = () => {
     return store.count;
   };

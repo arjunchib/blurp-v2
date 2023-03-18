@@ -1,6 +1,6 @@
 {
   "name": "blurp",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "description": "Discord API framework for Cloudflare Workers, Bun, Node, and Deno",
   "license": "MIT License",
   "devDependencies": {

@@ -1,6 +1,6 @@
 {
   "name": "@blurp/bun",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Bun runtime for Blurp",
   "license": "MIT License",
   "author": {

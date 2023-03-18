@@ -1,6 +1,6 @@
 {
   "name": "@blurp/common",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Discord API framework for Cloudflare Workers, Bun, Node, and Deno",
   "author": {
     "name": "Arjun Chib",

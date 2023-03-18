@@ -13,11 +13,12 @@
   "devDependencies": {
     "@types/node": "^18.11.18",
     "dotenv": "^16.0.3",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.2"
   },
   "dependencies": {
-    "@blurp/common": "workspace:^0.2.0",
-    "@blurp/node": "workspace:^0.2.0",
+    "@blurp/common": "workspace:*",
+    "@blurp/node": "workspace:*",
     "discord-api-types": "^0.37.31"
   }
 }

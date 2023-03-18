@@ -95,14 +95,14 @@ export class Options<T extends Immutable<APIApplicationCommandOption[]>> {
     if (!option2) return ret1;
 
     // option 2
-    if (!("options" in ret1)) return undefined;
+    if (!(ret1 && "options" in ret1)) return undefined;
     const ret2 = (
       ret1.options as APIApplicationCommandInteractionDataOption[]
     ).find((opt) => opt.name === option2);
     if (!option3) return ret2;
 
     // option 3
-    if (!("options" in ret2)) return undefined;
+    if (!(ret2 && "options" in ret2)) return undefined;
     return (ret2.options as APIApplicationCommandInteractionDataOption[]).find(
       (opt) => opt.name === option3
     );

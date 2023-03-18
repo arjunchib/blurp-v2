@@ -1,6 +1,6 @@
 import { updateCommands } from "@blurp/node";
-import * as Tally from "../src/tally.js";
-import * as Test from "../src/test.js";
+import Tally from "../src/tally.js";
+import Test from "../src/test.js";
 
 await updateCommands({
   commands: [Tally, Test],

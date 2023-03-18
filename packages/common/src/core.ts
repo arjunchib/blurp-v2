@@ -1,5 +1,4 @@
 // Types
-export * from "./types.js";
 export { WebhookContext } from "./context/webhook-context.js";
 export { GatewayContext } from "./context/gateway-context.js";
 export { Rest } from "./core/rest.js";

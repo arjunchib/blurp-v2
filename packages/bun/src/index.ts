@@ -7,12 +7,11 @@ import {
   CommandResolver,
   Rest,
   environment,
-  CommandModule,
   WebhookContext,
   Gateway,
   GatewayContext,
 } from "@blurp/common/core";
-
+import { Command } from "@blurp/common";
 export { updateCommands } from "@blurp/common";
 
 environment.token = Bun.env.TOKEN;
@@ -22,7 +21,7 @@ environment.publicKey = Bun.env.PUBLIC_KEY;
 
 const rest = new Rest();
 
-export const serveWebhook = (commands: CommandModule[]) => {
+export const serveWebhook = (commands: Command[]) => {
   const webhook = new Webhook();
   const rest = new Rest();
   const resolver = new CommandResolver(commands);
@@ -39,7 +38,7 @@ export const serveWebhook = (commands: CommandModule[]) => {
 };
 
 // https://github.com/oven-sh/bun/issues/1592
-export function connectGateway(commands: CommandModule[]) {
+export function connectGateway(commands: Command[]) {
   const rest = new Rest();
   const gateway = new Gateway(rest);
   const resolver = new CommandResolver(commands);

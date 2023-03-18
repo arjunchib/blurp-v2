@@ -1,8 +1,8 @@
 import { APIInteraction, InteractionType } from "discord-api-types/v10";
-import { CommandModule, Handler } from "./types.js";
+import { Command, Handler } from "./command.js";
 
 export class CommandResolver {
-  constructor(private commands: CommandModule[]) {}
+  constructor(private commands: Command[]) {}
 
   resolve(interaction: APIInteraction): Handler | undefined {
     const { type } = interaction;
@@ -15,7 +15,7 @@ export class CommandResolver {
     ) {
       name = interaction.data.custom_id.split(":")[0];
     }
-    const command = this.commands.find((cmd) => cmd.command.name === name);
-    return command?.default;
+    const command = this.commands.find((cmd) => cmd.meta.name === name);
+    return command?.handler;
   }
 }

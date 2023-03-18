@@ -1,16 +1,16 @@
 import { APIApplicationCommand } from "discord-api-types/v10";
 import { Rest } from "./core.js";
-import { CommandModule } from "./types.js";
+import { Command, Meta } from "./command.js";
 
 const rest = new Rest();
 
 interface Options {
-  commands: CommandModule[];
+  commands: Command[];
   global?: boolean;
 }
 
 function compareCommands(
-  localCommand: CommandModule["command"],
+  localCommand: Meta,
   remoteCommand: APIApplicationCommand
 ) {
   // checks if a is a subset of b
@@ -27,14 +27,14 @@ function compareCommands(
   return subset(localCommand, remoteCommand);
 }
 
-export async function updateCommands(commands: CommandModule[]);
+export async function updateCommands(commands: Command[]);
 export async function updateCommands(options: Options);
-export async function updateCommands(input: CommandModule[] | Options) {
+export async function updateCommands(input: Command[] | Options) {
   const options = Array.isArray(input) ? { commands: input } : input;
   const data = options.global
     ? await rest.getGlobalApplicationCommands()
     : await rest.getGuildApplicationCommands();
-  const commandData = options.commands.map((c) => c.command);
+  const commandData = options.commands.map((c) => c.meta);
   const commandsMatch =
     commandData.length === data.length &&
     commandData.every((localCommand) => {

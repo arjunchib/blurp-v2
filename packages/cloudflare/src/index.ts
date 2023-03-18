@@ -1,14 +1,14 @@
 import { APIInteraction } from "discord-api-types/v10";
 import {
-  CommandModule,
   WebhookContext,
   CommandResolver,
   environment,
   Rest,
   Webhook,
 } from "@blurp/common/core";
+import { Command } from "@blurp/common";
 
-export const serveWebhook = (commands: CommandModule[]) => {
+export const serveWebhook = (commands: Command[]) => {
   const webhook = new Webhook();
   const rest = new Rest();
   const resolver = new CommandResolver(commands);

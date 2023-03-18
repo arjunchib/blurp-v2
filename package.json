@@ -4,7 +4,7 @@
   "description": "Discord API framework for Cloudflare Workers, Bun, Node, and Deno",
   "license": "MIT License",
   "devDependencies": {
-    "typescript": "^4.9.5"
+    "typescript": "^5.0.2"
   },
   "scripts": {
     "build": "tsc -b packages/bun packages/cloudflare packages/node packages/common",

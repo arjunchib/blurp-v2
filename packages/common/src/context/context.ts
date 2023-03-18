@@ -7,9 +7,9 @@ import {
 } from "discord-api-types/v10";
 import type { Rest } from "../core/rest.js";
 import { Options } from "../options.js";
-import { Command } from "../types.js";
+import { Meta } from "../command.js";
 
-type IsCommand<T> = T extends Command ? T : never;
+type IsMeta<T> = T extends Meta ? T : never;
 
 // Branded Type:
 // declare const tag: unique symbol;
@@ -17,8 +17,11 @@ type IsCommand<T> = T extends Command ? T : never;
 //   readonly [tag]?: T;
 // };
 
-export abstract class Context<T = Command> {
-  constructor(public interaction: APIInteraction, protected rest: Rest) {}
+export abstract class Context<
+  M = Meta,
+  I extends APIInteraction = APIInteraction
+> {
+  constructor(public interaction: I, protected rest: Rest) {}
 
   abstract reply(response: APIInteractionResponse): void;
   abstract defer(): void;
@@ -30,7 +33,7 @@ export abstract class Context<T = Command> {
     );
   }).bind(this);
 
-  #options: Options<IsCommand<T>["options"]>;
+  #options: Options<IsMeta<M>["options"]>;
 
   get options() {
     if (this.#options) return this.#options;
@@ -44,7 +47,7 @@ export abstract class Context<T = Command> {
     ) {
       return null;
     }
-    const options = new Options<IsCommand<T>["options"]>(
+    const options = new Options<IsMeta<M>["options"]>(
       this.interaction.data.options
     );
     this.#options = options;

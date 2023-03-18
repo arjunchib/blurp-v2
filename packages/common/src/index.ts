@@ -1,6 +1,6 @@
-export { Command } from "./types.js";
 export { Context } from "./context/context.js";
 export { updateCommands } from "./update_commands.js";
+export { Command } from "./command.js";
 
 // Components
 export { ChannelMessageWithSource } from "./components/channel_message_with_source.js";

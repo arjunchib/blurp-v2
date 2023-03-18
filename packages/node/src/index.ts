@@ -1,7 +1,7 @@
+import { Command } from "@blurp/common";
 import {
   Rest,
   environment,
-  CommandModule,
   Webhook,
   CommandResolver,
   WebhookContext,
@@ -21,7 +21,7 @@ const rest = new Rest();
 
 type FetchCallback = (request: Request) => Promise<unknown> | unknown;
 
-export const serveWebhook = (commands: CommandModule[]) => {
+export const serveWebhook = (commands: Command[]) => {
   const webhook = new Webhook();
   const rest = new Rest();
   const resolver = new CommandResolver(commands);
@@ -76,7 +76,9 @@ const getRequestListener = (fetchCallback: FetchCallback) => {
       res = (await fetchCallback(
         new Request(url.toString(), init)
       )) as Response;
-    } catch {
+    } catch (e) {
+      // TODO: Figure out error logging
+      console.error(e);
       res = new Response(null, { status: 500 });
     }
 

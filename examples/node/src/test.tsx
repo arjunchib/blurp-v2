@@ -70,7 +70,7 @@ export default async function Test({
     interaction.type === InteractionType.ApplicationCommand &&
     interaction.data.type === ApplicationCommandType.ChatInput
   ) {
-    const content = `string1: ${
+    const content = `group1: ${
       options.pluck("group1", "command2", "string1").value
     }`;
     reply(

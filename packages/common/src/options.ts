@@ -90,12 +90,19 @@ export class Options<T extends Immutable<APIApplicationCommandOption[]>> {
     option3: Option3
   ): Prettify<K[Option1][Option2][Option3]> | undefined;
   pluck(option1: string, option2?: string, option3?: string): any {
+    // option 1
     const ret1 = this.value.find((opt) => opt.name === option1);
-    if (!option2 || !("options" in ret1)) return ret1;
+    if (!option2) return ret1;
+
+    // option 2
+    if (!("options" in ret1)) return undefined;
     const ret2 = (
       ret1.options as APIApplicationCommandInteractionDataOption[]
     ).find((opt) => opt.name === option2);
-    if (!option3 || !("options" in ret2)) return ret2;
+    if (!option3) return ret2;
+
+    // option 3
+    if (!("options" in ret2)) return undefined;
     return (ret2.options as APIApplicationCommandInteractionDataOption[]).find(
       (opt) => opt.name === option3
     );

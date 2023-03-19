@@ -1,11 +1,8 @@
 {
+  "extends": "../../tsconfig.base",
   "include": ["src/**/*"],
   "compilerOptions": {
-    "composite": true,
     "rootDir": "src",
-    "target": "es2022",
-    "outDir": "lib",
-    "moduleResolution": "Node16",
-    "strictBindCallApply": true
+    "outDir": "lib"
   }
 }

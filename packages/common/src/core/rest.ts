@@ -42,7 +42,7 @@ export class Rest {
         res.ok ? logger.rest.debug(msg) : logger.rest.error(msg);
         return {} as T;
       }
-    } catch (e) {
+    } catch (e: any) {
       logger.rest.error(e);
       return {} as T;
     }

@@ -27,8 +27,8 @@ function compareCommands(
   return subset(localCommand, remoteCommand);
 }
 
-export async function updateCommands(commands: Command[]);
-export async function updateCommands(options: Options);
+export async function updateCommands(commands: Command[]): Promise<void>;
+export async function updateCommands(options: Options): Promise<void>;
 export async function updateCommands(input: Command[] | Options) {
   const options = Array.isArray(input) ? { commands: input } : input;
   const data = options.global

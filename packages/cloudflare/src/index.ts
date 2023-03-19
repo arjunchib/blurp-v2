@@ -38,6 +38,6 @@ export const serveWebhook = (commands: Command[]) => {
 };
 
 export class CloudflareContext<T> extends WebhookContext {
-  environment: T;
-  execContext: ExecutionContext;
+  environment?: T;
+  execContext?: ExecutionContext;
 }

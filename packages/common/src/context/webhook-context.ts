@@ -9,10 +9,10 @@ import type { Rest } from "../core/rest.js";
 
 export class WebhookContext extends Context {
   response: Promise<APIInteractionResponse>;
-  resolve: (
+  resolve?: (
     value: APIInteractionResponse | PromiseLike<APIInteractionResponse>
   ) => void;
-  reject: (reason: any) => void;
+  reject?: (reason: any) => void;
   resolved = false;
 
   constructor(payload: APIInteraction, rest: Rest) {
@@ -29,7 +29,7 @@ export class WebhookContext extends Context {
   }
 
   reply = ((response: APIInteractionResponse) => {
-    this.resolve(response);
+    this.resolve?.(response);
   }).bind(this);
 
   defer = (() => {
@@ -37,7 +37,7 @@ export class WebhookContext extends Context {
       this.interaction.type === InteractionType.MessageComponent
         ? InteractionResponseType.DeferredMessageUpdate
         : InteractionResponseType.DeferredChannelMessageWithSource;
-    this.resolve({ type });
+    this.resolve?.({ type });
   }).bind(this);
 
   runCommand(result: Promise<void> | void): Promise<void> | void {
@@ -46,7 +46,7 @@ export class WebhookContext extends Context {
         if (this.resolved) {
           throw e;
         } else {
-          this.reject(e);
+          this.reject?.(e);
         }
       });
     }

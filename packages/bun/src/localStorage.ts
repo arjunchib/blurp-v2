@@ -29,7 +29,7 @@ class Storage {
     this.db.run("DELETE FROM store WHERE key = ?", key);
   }
   clear(): void {
-    this.db.run("TRUNCATE TABLE store");
+    this.db?.run("TRUNCATE TABLE store");
   }
 }
 

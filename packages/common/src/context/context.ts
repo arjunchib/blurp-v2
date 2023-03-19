@@ -33,7 +33,7 @@ export abstract class Context<
     );
   }).bind(this);
 
-  #options: Options<IsMeta<M>["options"]>;
+  #options: Options<NonNullable<IsMeta<M>["options"]>> | undefined = undefined;
 
   get options() {
     if (this.#options) return this.#options;
@@ -42,12 +42,13 @@ export abstract class Context<
     if (
       !(
         this.interaction.type === InteractionType.ApplicationCommand &&
-        this.interaction.data.type === ApplicationCommandType.ChatInput
+        this.interaction.data.type === ApplicationCommandType.ChatInput &&
+        this.interaction.data.options
       )
     ) {
       return null;
     }
-    const options = new Options<IsMeta<M>["options"]>(
+    const options = new Options<NonNullable<IsMeta<M>["options"]>>(
       this.interaction.data.options
     );
     this.#options = options;

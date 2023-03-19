@@ -48,7 +48,7 @@ export class VoiceUdpConn {
         const dec = new TextDecoder();
         const nullByteIndex = packet
           .subarray(8)
-          .findIndex((value) => value === 0);
+          .findIndex((value: any) => value === 0);
         const end = nullByteIndex > 0 ? 8 + nullByteIndex : 72;
         const address = dec.decode(packet.subarray(8, end));
         const updView = new DataView(packet.buffer);
